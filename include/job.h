@@ -2,7 +2,7 @@
 
 #include <string>
 
-class Job {
+struct Job {
     std::string jobname;
     std::string subject;
     time_t datetime;
