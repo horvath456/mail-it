@@ -1,0 +1,2 @@
+option('nana_include_dir', type : 'string',  value: '/home/andreas/Downloads/nana/include/')
+option('nana_dir', type : 'string',  value: '/home/andreas/Downloads/nana/')
