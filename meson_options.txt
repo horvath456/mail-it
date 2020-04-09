@@ -1,2 +1,4 @@
 option('nana_include_dir', type : 'string',  value: '/home/andreas/Downloads/nana/include/')
 option('nana_dir', type : 'string',  value: '/home/andreas/Downloads/nana/')
+option('sqlitecpp_include_dir', type : 'string',  value: '/home/andreas/Downloads/SQLiteCpp/include/')
+option('sqlitecpp_dir', type : 'string',  value: '/home/andreas/Downloads/SQLiteCpp/')
