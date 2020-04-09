@@ -12,6 +12,12 @@
 #include <csv/reader.hpp>
 #pragma GCC diagnostic pop
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-qualifiers"
+#pragma GCC diagnostic ignored "-Wunused-value"
+#include <SMTPClient.h>
+#pragma GCC diagnostic pop
+
 #include "config.h"
 #include "job.h"
 #include "receipent.h"
@@ -27,8 +33,10 @@ int main()
 
     SQLite::Database db("test.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
+    CSMTPClient SMTPClient([](const std::string&){ return; });
+
     csv::Reader foo;
-    foo.read("test.csv");
+    //foo.read("test.csv");
 
     form fm;
 
