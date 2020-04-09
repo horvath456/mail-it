@@ -18,7 +18,8 @@ sqlite3_dep = dependency('sqlite3')
 
 inc_dir = include_directories(['include', 
                                 get_option('nana_include_dir'),
-                                get_option('sqlitecpp_include_dir')])
+                                get_option('sqlitecpp_include_dir'),
+                                get_option('csv_include_dir')])
 
 
 src = ['src/main.cpp']

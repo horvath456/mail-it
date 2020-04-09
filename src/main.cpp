@@ -5,6 +5,13 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreorder"
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#include <csv/reader.hpp>
+#pragma GCC diagnostic pop
+
 #include "config.h"
 #include "job.h"
 #include "receipent.h"
@@ -19,6 +26,9 @@ int main()
     Receipent r{};
 
     SQLite::Database db("test.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+    csv::Reader foo;
+    foo.read("test.csv");
 
     form fm;
 
