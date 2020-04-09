@@ -18,12 +18,17 @@
 #include <SMTPClient.h>
 #pragma GCC diagnostic pop
 
+#include <nlohmann/json.hpp>
+#include <inja.hpp>
+
 #include "config.h"
 #include "job.h"
 #include "receipent.h"
 
 using namespace std;
 using namespace nana;
+using namespace inja;
+using json = nlohmann::json;
 
 int main()
 {
@@ -33,7 +38,13 @@ int main()
 
     SQLite::Database db("test.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
-    CSMTPClient SMTPClient([](const std::string&){ return; });
+    CSMTPClient SMTPClient([](const std::string &) { return; });
+
+    json data;
+    data["name"] = "world";
+
+    render("Hello {{ name }}!", data);               // Returns std::string "Hello world!"
+    render_to(std::cout, "Hello {{ name }}!", data); // Prints "Hello world!"
 
     csv::Reader foo;
     //foo.read("test.csv");

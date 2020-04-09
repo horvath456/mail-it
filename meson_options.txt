@@ -5,3 +5,5 @@ option('sqlitecpp_dir', type : 'string',  value: '/home/andreas/Downloads/SQLite
 option('csv_include_dir', type : 'string',  value: '/home/andreas/Downloads/csv-master/include/')
 option('mailclient_include_dir', type : 'string',  value: '/home/andreas/Downloads/mailclient-cpp/MAIL/')
 option('mailclient_dir', type : 'string',  value: '/home/andreas/Downloads/mailclient-cpp/lib/')
+option('json_include_dir', type : 'string',  value: '/home/andreas/Downloads/json/single_include/')
+option('inja_include_dir', type : 'string',  value: '/home/andreas/Downloads/inja/single_include/inja/')

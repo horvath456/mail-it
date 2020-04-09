@@ -22,7 +22,9 @@ inc_dirs = include_directories(['include',
                                 get_option('nana_include_dir'),
                                 get_option('sqlitecpp_include_dir'),
                                 get_option('csv_include_dir'),
-                                get_option('mailclient_include_dir')])
+                                get_option('mailclient_include_dir'),
+                                get_option('json_include_dir'),
+                                get_option('inja_include_dir')])
 
 
 src = ['src/main.cpp']
