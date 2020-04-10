@@ -20,6 +20,6 @@ MailHandler::MailHandler(string host, int port, string username, string passwd)
 
 bool MailHandler::send_email(string sender, string receiver, string subject, string text)
 {
-    string strMail = "Subject: " + subject + "\n" + "\n" + text + "\n";
+    string strMail = "Subject: " + subject + "\n\n" + text + "\n";
     return SMTPClient.SendString(sender, receiver, "", strMail);
 }

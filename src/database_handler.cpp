@@ -20,10 +20,10 @@ DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE |
 
 void DatabaseHandler::add_receipent(Receipent r)
 {
-    string class_str{r.hasKey("class") ? "\"" + r.properties["class"].value + "\"" : "NULL"};
-    string username_str{r.hasKey("username") ? "\"" + r.properties["username"].value + "\"" : "NULL"};
-    string password_str{r.hasKey("password") ? "\"" + r.properties["password"].value + "\"" : "NULL"};
-    string id_str{r.hasKey("id") ? "\"" + r.properties["id"].value + "\"" : "NULL"};
+    string class_str{r.hasKey("class") ? "\"" + r.get_value("class") + "\"" : "NULL"};
+    string username_str{r.hasKey("username") ? "\"" + r.get_value("username") + "\"" : "NULL"};
+    string password_str{r.hasKey("password") ? "\"" + r.get_value("password") + "\"" : "NULL"};
+    string id_str{r.hasKey("id") ? "\"" + r.get_value("id") + "\"" : "NULL"};
 
     db.exec("INSERT INTO receipents VALUES (" + class_str + ", \"" +
             r.get_first_name().value + "\", \"" + r.get_last_name().value + "\", " + username_str + ", " +
