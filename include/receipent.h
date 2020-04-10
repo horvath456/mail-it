@@ -2,6 +2,8 @@
 
 #include "property_item.h"
 
+#include <string>
+
 struct Receipent : public PropertyItem
 {
     Receipent()
@@ -9,6 +11,13 @@ struct Receipent : public PropertyItem
         properties["first_name"] = Property{};
         properties["last_name"] = Property{};
         properties["email"] = Property{};
+    }
+
+    Receipent(std::string firstname, std::string lastname, std::string email)
+    {
+        properties["first_name"] = Property{firstname};
+        properties["last_name"] = Property{lastname};
+        properties["email"] = Property{email};
     }
 
     Property get_first_name()
