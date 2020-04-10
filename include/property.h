@@ -2,6 +2,7 @@
 
 #include <string>
 
-struct Property {
+struct Property
+{
     std::string value;
 };

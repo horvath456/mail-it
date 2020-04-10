@@ -2,7 +2,7 @@
 
 #include "property_item.h"
 
-struct Job : private PropertyItem {
+struct Job : public PropertyItem {
     Job() {
         properties["jobname"] = Property{};
         properties["subject"] = Property{};

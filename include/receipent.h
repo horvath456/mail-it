@@ -2,7 +2,7 @@
 
 #include "property_item.h"
 
-struct Receipent : private PropertyItem
+struct Receipent : public PropertyItem
 {
     Receipent()
     {
