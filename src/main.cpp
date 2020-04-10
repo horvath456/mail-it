@@ -3,8 +3,6 @@
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 
-#include <SQLiteCpp/SQLiteCpp.h>
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreorder"
 #pragma GCC diagnostic ignored "-Wdeprecated"
@@ -24,6 +22,7 @@
 #include "config.h"
 #include "job.h"
 #include "receipent.h"
+#include "database_handler.h"
 
 using namespace std;
 using namespace nana;
@@ -36,9 +35,9 @@ int main()
     Job job{};
     Receipent r{};
 
-    SQLite::Database db("test.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-
     CSMTPClient SMTPClient([](const std::string &) { return; });
+
+    DatabaseHandler db{};
 
     json data;
     data["name"] = "world";
