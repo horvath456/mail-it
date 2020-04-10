@@ -10,12 +10,6 @@
 #include <csv/reader.hpp>
 #pragma GCC diagnostic pop
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-qualifiers"
-#pragma GCC diagnostic ignored "-Wunused-value"
-#include <SMTPClient.h>
-#pragma GCC diagnostic pop
-
 #include <nlohmann/json.hpp>
 #include <inja.hpp>
 
@@ -23,6 +17,7 @@
 #include "job.h"
 #include "receipent.h"
 #include "database_handler.h"
+#include "mail_handler.h"
 
 using namespace std;
 using namespace nana;
@@ -35,8 +30,7 @@ int main()
     Job job{};
     Receipent r{};
 
-    CSMTPClient SMTPClient([](const std::string &) { return; });
-
+    MailHandler mailer{"host", 443, "user", "pw"};
     DatabaseHandler db{};
 
     json data;
