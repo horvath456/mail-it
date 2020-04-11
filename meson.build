@@ -3,7 +3,7 @@ project('mail-it', 'cpp',
 
 cc = meson.get_compiler('cpp')
 
-nana = cc.find_library('libnana', dirs: [get_option('nana_dir')])
+nanogui = cc.find_library('libnanogui', dirs: [get_option('nanogui_dir')])
 SQLiteCpp = cc.find_library('libSQLiteCpp', dirs: [get_option('sqlitecpp_dir')])
 mailclient = cc.find_library('libmailclient', dirs: [get_option('mailclient_dir')])
 
@@ -19,7 +19,7 @@ sqlite3_dep = dependency('sqlite3')
 libcurl_dep = dependency('libcurl')
 
 inc_dirs = include_directories(['include', 
-                                get_option('nana_include_dir'),
+                                get_option('nanogui_include_dir'),
                                 get_option('sqlitecpp_include_dir'),
                                 get_option('csv_include_dir'),
                                 get_option('mailclient_include_dir'),
@@ -27,10 +27,10 @@ inc_dirs = include_directories(['include',
                                 get_option('inja_include_dir')])
 
 
-src = ['src/main.cpp', 'src/database_handler.cpp', 'src/mail_handler.cpp', 'src/csv_utils.cpp', 'src/main_form.cpp']
+src = ['src/main.cpp', 'src/database_handler.cpp', 'src/mail_handler.cpp', 'src/csv_utils.cpp']
 
 executable('mail-it', 
            sources : src,
            include_directories : [inc_dirs],
-           dependencies: [nana, SQLiteCpp, mailclient, libcurl_dep, sqlite3_dep, thread_dep, fontconfig_dep, x11_dep, xext_dep, xft_dep, xrandr_dep, gl_dep, glu_dep]
+           dependencies: [nanogui, SQLiteCpp, mailclient, libcurl_dep, sqlite3_dep, thread_dep, fontconfig_dep, x11_dep, xext_dep, xft_dep, xrandr_dep, gl_dep, glu_dep]
            )
