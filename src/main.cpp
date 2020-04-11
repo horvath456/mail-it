@@ -1,8 +1,5 @@
 #include <iostream>
 
-#include <nana/gui.hpp>
-#include <nana/gui/widgets/label.hpp>
-
 #include <nlohmann/json.hpp>
 #include <inja.hpp>
 
@@ -14,8 +11,9 @@
 #include "mail_handler.h"
 #include "csv_utils.h"
 
+#include "main_form.h"
+
 using namespace std;
-using namespace nana;
 using namespace inja;
 using json = nlohmann::json;
 
@@ -36,12 +34,7 @@ int main()
     render("Hello {{ name }}!", data);               // Returns std::string "Hello world!"
 
 
-    form fm;
-
-    label lb{fm, rectangle{10, 10, 100, 100}};
-    lb.caption("Hello, world!");
-
-    fm.show();
-
-    exec();
+    MainForm main_form;
+    main_form.show();
+    nana::exec();
 }
