@@ -3,42 +3,39 @@
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/menubar.hpp>
-#include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/place.hpp>
-#include <nana/gui/msgbox.hpp>
-#include <nana/gui/filebox.hpp>
 
 using namespace nana;
 
 MainForm::MainForm()
 {
     caption("mit - Mail It");
-    menubar_.create(*this);
 
-    textbox_.create(*this);
-    textbox_.borderless(true);
-    API::effects_edge_nimbus(textbox_, effects::edge_nimbus::none);
-    textbox_.enable_dropfiles(true);
+    menubar.create(*this);
+    make_menus();
 
-    _m_make_menus();
+    list.create(*this);
+    list.append_header("Name");
+    list.append_header("Age");
 
-    place_.bind(*this);
-    place_.div("vert<menubar weight=28><textbox>");
-    place_.field("menubar") << menubar_;
-    place_.field("textbox") << textbox_;
-    place_.collocate();
+    place.bind(*this);
+    place.div("vert<menubar weight=28><listbox>");
+    place.field("menubar") << menubar;
+    place.field("listbox") << list;
+    place.collocate();
 }
 
-void MainForm::_m_make_menus()
+void MainForm::make_menus()
 {
-    menubar_.push_back("&FILE");
-    menubar_.at(0).append("New", [this](menu::item_proxy &) {
+    menubar.push_back("&FILE");
+    menubar.at(0).append("New", [this](menu::item_proxy &) {
 
     });
-    menubar_.at(0).append("Open", [this](menu::item_proxy &) {
+    menubar.at(0).append("Open", [this](menu::item_proxy &) {
 
     });
-    menubar_.at(0).append("Save", [this](menu::item_proxy &) {
+    menubar.at(0).append("Save", [this](menu::item_proxy &) {
 
     });
 }
