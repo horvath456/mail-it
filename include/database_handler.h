@@ -3,6 +3,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 
 #include <optional>
+#include <vector>
 
 #include "receipent.h"
 #include "job.h"
@@ -14,6 +15,7 @@ public:
     DatabaseHandler();
     void add_receipent(Receipent r);
     void delete_all_receipents();
+    std::vector<Receipent> get_all_receipents();
     void add_job(Job j);
     std::optional<Job> get_job(std::string jobname);
     void delete_job(Job j);

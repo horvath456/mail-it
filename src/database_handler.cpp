@@ -3,6 +3,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 
 #include <string>
+#include <vector>
 #include <optional>
 
 #include "receipent.h"
@@ -14,14 +15,17 @@ using namespace std;
 DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE}
 {
     db.exec("CREATE TABLE IF NOT EXISTS receipent ("
-            "class VARCHAR(10),"
+            "vorname VARCHAR(255),"
+            "nachname VARCHAR(255),"
+            "email VARCHAR(255),"
+            "primary key(firstname, lastname))");
+    db.exec("CREATE TABLE IF NOT EXISTS receipent_property ("
             "firstname VARCHAR(255),"
             "lastname VARCHAR(255),"
-            "username VARCHAR(255),"
-            "password VARCHAR(255),"
-            "email VARCHAR(255),"
-            "id VARCHAR(255),"
-            "primary key(firstname, lastname))");
+            "name VARCHAR(255),"
+            "value VARCHAR(255),"
+            "foreign key(firstname, lastname) references receipent,"
+            "primary key(firstname, lastname, name))");
     db.exec("CREATE TABLE IF NOT EXISTS job ("
             "jobname VARCHAR(255),"
             "subject VARCHAR(255),"
@@ -44,31 +48,68 @@ DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE |
 
 void DatabaseHandler::add_receipent(Receipent r)
 {
-    string class_str{r.hasKey("class") ? "\"" + r.get_value("class") + "\"" : "NULL"};
-    string username_str{r.hasKey("username") ? "\"" + r.get_value("username") + "\"" : "NULL"};
-    string password_str{r.hasKey("password") ? "\"" + r.get_value("password") + "\"" : "NULL"};
-    string id_str{r.hasKey("id") ? "\"" + r.get_value("id") + "\"" : "NULL"};
+    db.exec("INSERT INTO receipent VALUES (\"" + r.get_first_name() + "\", \"" +
+            r.get_last_name() + "\", \"" + r.get_email() + ")");
 
-    db.exec("INSERT INTO receipent VALUES (\"" + class_str + "\", \"" +
-            r.get_first_name().value + "\", \"" + r.get_last_name().value + "\", " + username_str + ", " +
-            password_str + ", \"" + r.get_email().value + "\"," + id_str + ")");
+    for (auto el : r.get_other_properties())
+    {
+        db.exec("INSERT INTO receipent_property VALUES (\"" + r.get_first_name() + "\", \"" + r.get_last_name() + "\", \"" +
+                el.first + "\", \"" + el.second + "\")");
+    }
 }
 
 void DatabaseHandler::delete_all_receipents()
 {
     db.exec("DELETE FROM receipent");
+    db.exec("DELETE FROM receipent_property");
+}
+
+vector<Receipent> DatabaseHandler::get_all_receipents()
+{
+    vector<Receipent> receipents;
+
+    SQLite::Statement query1{db, "SELECT * FROM receipent"};
+
+    while (query1.executeStep())
+    {
+        Receipent receipent{};
+
+        string firstname = query1.getColumn(0);
+        string lastname = query1.getColumn(1);
+        string email = query1.getColumn(2);
+
+        receipent.set_email(email);
+        receipent.set_last_name(lastname);
+        receipent.set_first_name(firstname);
+
+        SQLite::Statement query2{db, "SELECT * FROM receipent_property WHERE vorname = ? AND nachname = ?"};
+        query2.bind(1, firstname);
+        query2.bind(2, lastname);
+
+        while (query2.executeStep())
+        {
+            string name = query2.getColumn(2);
+            string value = query2.getColumn(3);
+
+            receipent.set_property(name, value);
+        }
+
+        receipents.push_back(receipent);
+    }
+
+    return receipents;
 }
 
 void DatabaseHandler::add_job(Job j)
 {
-    db.exec("INSERT INTO job VALUES (\"" + j.get_jobname().value + "\", \"" +
-            j.get_subject().value + "\", \"" + j.get_datetime().value + "\", \"" +
-            j.get_selector().value + "\", \"" + j.get_template().value + "\")");
+    db.exec("INSERT INTO job VALUES (\"" + j.get_jobname() + "\", \"" +
+            j.get_subject() + "\", \"" + j.get_datetime() + "\", \"" +
+            j.get_selector() + "\", \"" + j.get_template() + "\")");
 
     for (auto el : j.get_other_properties())
     {
-        db.exec("INSERT INTO job_property VALUES (\"" + j.get_jobname().value + "\", \"" +
-                el.first + "\", \"" + el.second.value + "\")");
+        db.exec("INSERT INTO job_property VALUES (\"" + j.get_jobname() + "\", \"" +
+                el.first + "\", \"" + el.second + "\")");
     }
 }
 
@@ -89,11 +130,11 @@ optional<Job> DatabaseHandler::get_job(string jobname)
         string selector = query1.getColumn(3);
         string tmplate = query1.getColumn(4);
 
-        job.properties["jobname"] = jobname;
-        job.properties["subject"] = subject;
-        job.properties["datetime"] = datetime;
-        job.properties["selector"] = selector;
-        job.properties["template"] = tmplate;
+        job.set_datetime(datetime);
+        job.set_subject(subject);
+        job.set_template(tmplate);
+        job.set_selector(selector);
+        job.set_jobname(jobname);
 
         found = true;
     }
@@ -108,7 +149,7 @@ optional<Job> DatabaseHandler::get_job(string jobname)
             string name = query2.getColumn(1);
             string value = query2.getColumn(2);
 
-            job.properties[name] = value;
+            job.set_property(name, value);
         }
 
         return job;
@@ -121,8 +162,8 @@ optional<Job> DatabaseHandler::get_job(string jobname)
 
 void DatabaseHandler::delete_job(Job j)
 {
-    db.exec("DELETE FROM job WHERE jobname = \"" + j.get_jobname().value + "\"");
-    db.exec("DELETE FROM job_property WHERE jobname = \"" + j.get_jobname().value + "\"");
+    db.exec("DELETE FROM job WHERE jobname = \"" + j.get_jobname() + "\"");
+    db.exec("DELETE FROM job_property WHERE jobname = \"" + j.get_jobname() + "\"");
 }
 
 optional<Config> DatabaseHandler::get_config()

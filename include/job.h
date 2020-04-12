@@ -13,9 +13,9 @@ struct Job : public PropertyItem
         properties["template"] = Property{};
     }
 
-    std::map<std::string, Property> get_other_properties()
+    std::map<std::string, std::string> get_other_properties()
     {
-        std::map<std::string, Property> result{};
+        std::map<std::string, std::string> result{};
 
         for (auto el : properties)
         {
@@ -23,60 +23,60 @@ struct Job : public PropertyItem
                 el.first != "datetime" && el.first != "selector" &&
                 el.first != "template")
             {
-                result[el.first] = el.second;
+                result[el.first] = el.second.value;
             }
         }
 
         return result;
     }
 
-    Property get_jobname()
+    std::string get_jobname()
     {
-        return properties["jobname"];
+        return properties["jobname"].value;
     }
 
-    void set_jobname(Property p)
+    void set_jobname(std::string v)
     {
-        properties["jobname"] = p;
+        properties["jobname"] = Property{v};
     }
 
-    Property get_subject()
+    std::string get_subject()
     {
-        return properties["subject"];
+        return properties["subject"].value;
     }
 
-    void set_subject(Property p)
+    void set_subject(std::string v)
     {
-        properties["subject"] = p;
+        properties["subject"] = Property{v};
     }
 
-    Property get_datetime()
+    std::string get_datetime()
     {
-        return properties["datetime"];
+        return properties["datetime"].value;
     }
 
-    void set_datetime(Property p)
+    void set_datetime(std::string v)
     {
-        properties["datetime"] = p;
+        properties["datetime"] = Property{v};
     }
 
-    Property get_selector()
+    std::string get_selector()
     {
-        return properties["selector"];
+        return properties["selector"].value;
     }
 
-    void set_selector(Property p)
+    void set_selector(std::string v)
     {
-        properties["selector"] = p;
+        properties["selector"] = Property{v};
     }
 
-    Property get_template()
+    std::string get_template()
     {
-        return properties["template"];
+        return properties["template"].value;
     }
 
-    void set_template(Property p)
+    void set_template(std::string v)
     {
-        properties["template"] = p;
+        properties["template"] = Property{v};
     }
 };

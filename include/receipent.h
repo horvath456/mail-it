@@ -3,47 +3,67 @@
 #include "property_item.h"
 
 #include <string>
+#include <map>
 
 struct Receipent : public PropertyItem
 {
     Receipent()
     {
-        properties["first_name"] = Property{};
-        properties["last_name"] = Property{};
+        properties["vorname"] = Property{};
+        properties["nachname"] = Property{};
         properties["email"] = Property{};
     }
 
     Receipent(std::string firstname, std::string lastname, std::string email)
     {
-        properties["first_name"] = Property{firstname};
-        properties["last_name"] = Property{lastname};
+        properties["vorname"] = Property{firstname};
+        properties["nachname"] = Property{lastname};
         properties["email"] = Property{email};
     }
 
-    Property get_first_name()
+    std::string get_first_name()
     {
-        return properties["first_name"];
+        return properties["vorname"].value;
     }
 
-    void set_first_name(Property p) {
-        properties["first_name"] = p;
-    }
-
-    Property get_last_name()
+    void set_first_name(std::string v)
     {
-        return properties["last_name"];
+        properties["vorname"] = Property{v};
     }
 
-    void set_last_name(Property p) {
-        properties["last_name"] = p;
-    }
-
-    Property get_email()
+    std::string get_last_name()
     {
-        return properties["email"];
+        return properties["nachname"].value;
     }
 
-    void set_email(Property p) {
-        properties["email"] = p;
+    void set_last_name(std::string v)
+    {
+        properties["nachname"] = Property{v};
+    }
+
+    std::string get_email()
+    {
+        return properties["email"].value;
+    }
+
+    void set_email(std::string v)
+    {
+        properties["email"] = Property{v};
+    }
+
+    std::map<std::string, std::string> get_other_properties()
+    {
+        std::map<std::string, std::string> result{};
+
+        for (auto el : properties)
+        {
+            if (el.first != "vorname" && el.first != "nachname" &&
+                el.first != "email")
+            {
+                result[el.first] = el.second.value;
+            }
+        }
+
+        return result;
     }
 };

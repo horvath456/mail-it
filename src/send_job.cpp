@@ -67,7 +67,7 @@ Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
     {
         if (firstname == "")
         {
-            if (r.get_last_name().value == lastname)
+            if (r.get_last_name() == lastname)
             {
                 return r;
             }
@@ -77,14 +77,14 @@ Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
             if (string_ends_with(firstname, "."))
             {
                 string firstname_without_last_char = firstname.substr(0, firstname.size() - 1);
-                if (r.get_last_name().value == lastname && string_starts_with(r.get_first_name().value, firstname_without_last_char))
+                if (r.get_last_name() == lastname && string_starts_with(r.get_first_name(), firstname_without_last_char))
                 {
                     return r;
                 }
             }
             else
             {
-                if (r.get_last_name().value == lastname && r.get_first_name().value == firstname)
+                if (r.get_last_name() == lastname && r.get_first_name() == firstname)
                 {
                     return r;
                 }
@@ -134,7 +134,7 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
         string receipent_name = jobfile_el.find("name") == jobfile_el.end() ? jobfile_el["Name"] : jobfile_el["name"];
         Receipent r = get_receipent(receipent_name, all_receipents);
 
-        if (!selector_includes_receipent(job.get_selector().value, r))
+        if (!selector_includes_receipent(job.get_selector(), r))
         {
             continue;
         }
@@ -153,9 +153,9 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
             data[static_cast<string>(jobfile_prop.first)] = static_cast<string>(jobfile_prop.second);
         }
 
-        string email_contents{render(job.get_template().value, data)};
-        string email_receiver = r.get_email().value;
-        string subject = job.get_subject().value;
+        string email_contents{render(job.get_template(), data)};
+        string email_receiver = r.get_email();
+        string subject = job.get_subject();
 
         send(email_receiver, subject, email_contents);
     }
