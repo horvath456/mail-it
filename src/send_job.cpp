@@ -92,8 +92,8 @@ bool selector_includes_receipent(string selector, Receipent r)
     for (string token : tokens)
     {
         vector<string> inner_tokens = split(token, '=');
-        string name = inner_tokens.get(0);
-        string value = inner_tokens.get(1);
+        string name = inner_tokens.at(0);
+        string value = inner_tokens.at(1);
 
         if (r.properties[name].value != value)
         {
