@@ -1,5 +1,5 @@
-option('nanogui_include_dir', type : 'string',  value: '/home/andreas/Downloads/nanogui/include/')
-option('nanogui_dir', type : 'string',  value: '/home/andreas/Downloads/nanogui/')
+option('nana_include_dir', type : 'string',  value: '/home/andreas/Downloads/nana/include/')
+option('nana_dir', type : 'string',  value: '/home/andreas/Downloads/nana/')
 option('sqlitecpp_include_dir', type : 'string',  value: '/home/andreas/Downloads/SQLiteCpp/include/')
 option('sqlitecpp_dir', type : 'string',  value: '/home/andreas/Downloads/SQLiteCpp/')
 option('csv_include_dir', type : 'string',  value: '/home/andreas/Downloads/csv-master/include/')
