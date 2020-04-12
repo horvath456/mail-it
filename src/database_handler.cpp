@@ -7,6 +7,7 @@
 
 #include "receipent.h"
 #include "job.h"
+#include "config.h"
 
 using namespace std;
 
@@ -20,19 +21,25 @@ DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE |
             "password VARCHAR(255),"
             "email VARCHAR(255),"
             "id VARCHAR(255),"
-            "primary key(firstname, lastname)) ");
+            "primary key(firstname, lastname))");
     db.exec("CREATE TABLE IF NOT EXISTS job ("
             "jobname VARCHAR(255),"
             "subject VARCHAR(255),"
             "datetime CHAR(19),"
             "selector TEXT,"
             "template TEXT,"
-            "primary key(jobname)) ");
+            "primary key(jobname))");
     db.exec("CREATE TABLE IF NOT EXISTS job_property ("
             "jobname VARCHAR(255) references job,"
             "name VARCHAR(255),"
             "value VARCHAR(255),"
-            "primary key(jobname, name)) ");
+            "primary key(jobname, name))");
+    db.exec("CREATE TABLE IF NOT EXISTS config ("
+            "host VARCHAR(255),"
+            "port NUMBER(5),"
+            "username VARCHAR(255),"
+            "passwd VARCHAR(255),"
+            "template TEXT)");
 }
 
 void DatabaseHandler::add_receipent(Receipent r)
@@ -105,11 +112,51 @@ optional<Job> DatabaseHandler::get_job(string jobname)
         }
 
         return job;
-    } else return {};
+    }
+    else
+    {
+        return {};
+    }
 }
 
 void DatabaseHandler::delete_job(Job j)
 {
     db.exec("DELETE FROM job WHERE jobname = \"" + j.get_jobname().value + "\"");
     db.exec("DELETE FROM job_property WHERE jobname = \"" + j.get_jobname().value + "\"");
+}
+
+optional<Config> DatabaseHandler::get_config()
+{
+    Config cfg{};
+
+    bool found = false;
+
+    SQLite::Statement query{db, "SELECT * FROM config"};
+
+    while (query.executeStep())
+    {
+        cfg.host = static_cast<string>(query.getColumn(0));
+        cfg.port = static_cast<int>(query.getColumn(1));
+        cfg.username = static_cast<string>(query.getColumn(2));
+        cfg.passwd = static_cast<string>(query.getColumn(3));
+        cfg.tmplate = static_cast<string>(query.getColumn(4));
+
+        found = true;
+    }
+
+    if (found)
+    {
+        return cfg;
+    }
+    else
+    {
+        return {};
+    }
+}
+
+void DatabaseHandler::set_config(Config cfg)
+{
+    db.exec("UPDATE config SET host = \"" + cfg.host + "\", port = " + to_string(cfg.port) +
+            ", username = \"" + cfg.username + "\", passwd = \"" + cfg.passwd +
+            "\", template = \"" + cfg.tmplate + "\"");
 }

@@ -6,6 +6,7 @@
 
 #include "receipent.h"
 #include "job.h"
+#include "config.h"
 
 class DatabaseHandler
 {
@@ -16,6 +17,8 @@ public:
     void add_job(Job j);
     std::optional<Job> get_job(std::string jobname);
     void delete_job(Job j);
+    std::optional<Config> get_config();
+    void set_config(Config cfg);
 
 private:
     SQLite::Database db;
