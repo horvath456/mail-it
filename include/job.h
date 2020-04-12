@@ -2,8 +2,10 @@
 
 #include "property_item.h"
 
-struct Job : public PropertyItem {
-    Job() {
+struct Job : public PropertyItem
+{
+    Job()
+    {
         properties["jobname"] = Property{};
         properties["subject"] = Property{};
         properties["datetime"] = Property{};
@@ -11,12 +13,30 @@ struct Job : public PropertyItem {
         properties["template"] = Property{};
     }
 
+    std::map<std::string, Property> get_other_properties()
+    {
+        std::map<std::string, Property> result{};
+
+        for (auto el : properties)
+        {
+            if (el.first != "jobname" && el.first != "subject" &&
+                el.first != "datetime" && el.first != "selector" &&
+                el.first != "template")
+            {
+                result[el.first] = el.second;
+            }
+        }
+
+        return result;
+    }
+
     Property get_jobname()
     {
         return properties["jobname"];
     }
 
-    void set_jobname(Property p) {
+    void set_jobname(Property p)
+    {
         properties["jobname"] = p;
     }
 
@@ -25,7 +45,8 @@ struct Job : public PropertyItem {
         return properties["subject"];
     }
 
-    void set_subject(Property p) {
+    void set_subject(Property p)
+    {
         properties["subject"] = p;
     }
 
@@ -34,7 +55,8 @@ struct Job : public PropertyItem {
         return properties["datetime"];
     }
 
-    void set_datetime(Property p) {
+    void set_datetime(Property p)
+    {
         properties["datetime"] = p;
     }
 
@@ -43,7 +65,8 @@ struct Job : public PropertyItem {
         return properties["selector"];
     }
 
-    void set_selector(Property p) {
+    void set_selector(Property p)
+    {
         properties["selector"] = p;
     }
 
@@ -52,7 +75,8 @@ struct Job : public PropertyItem {
         return properties["template"];
     }
 
-    void set_template(Property p) {
+    void set_template(Property p)
+    {
         properties["template"] = p;
     }
 };

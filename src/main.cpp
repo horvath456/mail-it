@@ -39,10 +39,6 @@ Color colval(0.5f, 0.5f, 0.7f, 1.f);
 
 int main()
 {
-    Config cfg{};
-    Job job{};
-    Receipent r{};
-
     MailHandler mailer{"host", 443, "user", "pw"};
     DatabaseHandler db{};
 
