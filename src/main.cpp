@@ -1,8 +1,5 @@
 #include <iostream>
 
-#include <nlohmann/json.hpp>
-#include <inja.hpp>
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #include <nanogui/nanogui.h>
@@ -18,8 +15,6 @@
 
 using namespace std;
 using namespace nanogui;
-using namespace inja;
-using json = nlohmann::json;
 
 enum test_enum
 {
@@ -42,10 +37,7 @@ int main()
     MailHandler mailer{"host", 443, "user", "pw"};
     DatabaseHandler db{};
 
-    json data;
-    data["name"] = "world";
-
-    render("Hello {{ name }}!", data); // Returns std::string "Hello world!"
+    
 
     nanogui::init();
 
