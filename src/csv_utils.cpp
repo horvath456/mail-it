@@ -25,10 +25,10 @@ vector<Receipent> CSV::read_recipient_list(string filename)
     for (auto &row : rows)
     {
         Receipent r{row["Vorname"], row["Nachname"], row["Email"]};
-        r.properties["Klasse"] = row["Klasse"];
-        r.properties["Benutzername"] = row["Benutzername"];
-        r.properties["Kennwort"] = row["Kennwort"];
-        r.properties["ID"] = row["ID"];
+        r.set_property("Klasse", row["Klasse"]);
+        r.set_property("Benutzername", row["Benutzername"]);
+        r.set_property("Kennwort", row["Kennwort"]);
+        r.set_property("ID", row["ID"]);
 
         result.push_back(r);
     }
