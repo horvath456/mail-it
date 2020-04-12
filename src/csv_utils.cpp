@@ -16,8 +16,22 @@ using namespace std;
 
 vector<Receipent> CSV::read_recipient_list(string filename)
 {
+    vector<Receipent> result{};
+
     csv::Reader reader;
     reader.read(filename);
-    vector<Receipent> result{};
+
+    auto rows = reader.rows();
+    for (auto &row : rows)
+    {
+        Receipent r{row["Vorname"], row["Nachname"], row["Email"]};
+        r.properties["Klasse"] = row["Klasse"];
+        r.properties["Benutzername"] = row["Benutzername"];
+        r.properties["Kennwort"] = row["Kennwort"];
+        r.properties["ID"] = row["ID"];
+
+        result.push_back(r);
+    }
+
     return result;
 }
