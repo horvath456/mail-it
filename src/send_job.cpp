@@ -24,12 +24,24 @@ using namespace std;
 using namespace inja;
 using json = nlohmann::json;
 
-bool string_ends_with(const std::string &str, const std::string &suffix)
+vector<string> split(const string &s, char delim)
+{
+    stringstream ss(s);
+    string item;
+    vector<string> elems;
+    while (getline(ss, item, delim))
+    {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+bool string_ends_with(const string &str, const string &suffix)
 {
     return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
 }
 
-bool string_starts_with(const std::string &str, const std::string &prefix)
+bool string_starts_with(const string &str, const string &prefix)
 {
     return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
 }
@@ -73,7 +85,26 @@ Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
     return return_receipent;
 }
 
-void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipents, void (*send)(std::string, std::string, std::string))
+bool selector_includes_receipent(string selector, Receipent r)
+{
+    vector<string> tokens = split(selector, '&');
+
+    for (string token : tokens)
+    {
+        vector<string> inner_tokens = split(token, '=');
+        string name = inner_tokens.get(0);
+        string value = inner_tokens.get(1);
+
+        if (r.properties[name].value != value)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipents, void (*send)(string, string, string))
 {
     csv::Reader reader;
     reader.read(jobfile);
@@ -84,11 +115,16 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
     {
         if (jobfile_el.find("name") == jobfile_el.end() && jobfile_el.find("Name") == jobfile_el.end())
         {
-            throw std::invalid_argument("Jobfile entry has no name!");
+            throw invalid_argument("Jobfile entry has no name!");
         }
 
         string receipent_name = jobfile_el.find("name") == jobfile_el.end() ? jobfile_el["Name"] : jobfile_el["name"];
         Receipent r = get_receipent(receipent_name, all_receipents);
+
+        if (!selector_includes_receipent(job.get_selector().value, r))
+        {
+            continue;
+        }
 
         json data;
         for (auto &receipent_prop : r.properties)
