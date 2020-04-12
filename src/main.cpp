@@ -37,8 +37,6 @@ int main()
     MailHandler mailer{"host", 443, "user", "pw"};
     DatabaseHandler db{};
 
-    
-
     nanogui::init();
 
     Screen *screen = new Screen(Vector2i(500, 700), "NanoGUI test");
@@ -46,11 +44,22 @@ int main()
     bool enabled = true;
     FormHelper *gui = new FormHelper(screen);
     nanogui::ref<Window> window = gui->add_window(Vector2i(10, 10), "Form helper example");
-     window->set_layout(new GroupLayout());
+    window->set_layout(new GroupLayout());
 
     /*Window *window = new Window(screen, "Button demo");
     window->set_position(Vector2i(15, 15));
     window->set_layout(new GroupLayout());*/
+
+    nanogui::VScrollPanel *scroll_panel = new nanogui::VScrollPanel(window);
+    scroll_panel->set_fixed_size(nanogui::Vector2i(125, 200));
+    nanogui::Widget *checkboxes = new nanogui::Widget(scroll_panel);
+    checkboxes->set_layout(new nanogui::BoxLayout(nanogui::Orientation::Vertical, nanogui::Alignment::Minimum, 0, 0));
+    for (int i = 0; i < 100; i++)
+    {
+        nanogui::CheckBox *checkbox = new nanogui::CheckBox(checkboxes, "CheckBox " + to_string(i));
+        checkbox->set_checked(true);
+        checkbox->set_callback([i](bool) { cout << "Clicked CheckBox " << to_string(i) << "\n"; });
+    }
 
     Button *b = new Button(window, "Plain button");
     b->set_callback([] { std::cout << "pushed!" << std::endl; });
