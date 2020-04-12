@@ -24,6 +24,16 @@ using namespace std;
 using namespace inja;
 using json = nlohmann::json;
 
+string string_to_lower_case(string s) {
+    string res{};
+
+    for(char c : s) {
+        res += tolower(c);
+    }
+
+    return res;
+}
+
 vector<string> split(const string &s, char delim)
 {
     stringstream ss(s);
@@ -92,12 +102,15 @@ bool selector_includes_receipent(string selector, Receipent r)
     for (string token : tokens)
     {
         vector<string> inner_tokens = split(token, '=');
-        string name = inner_tokens.at(0);
+        string name = string_to_lower_case(inner_tokens.at(0));
         string value = inner_tokens.at(1);
 
-        if (r.properties[name].value != value)
-        {
-            return false;
+        for(auto entry : r.properties) {
+            string entry_name = string_to_lower_case(entry.first);
+            string entry_value = entry.second.value;
+            if(entry_name == name && entry_value != value) {
+                return false;
+            }
         }
     }
 
