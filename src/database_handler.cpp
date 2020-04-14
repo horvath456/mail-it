@@ -100,6 +100,45 @@ vector<Receipent> DatabaseHandler::get_all_receipents()
     return receipents;
 }
 
+vector<Job> DatabaseHandler::get_all_jobs()
+{
+    vector<Job> jobs;
+
+    SQLite::Statement query1{db, "SELECT * FROM job"};
+
+    while (query1.executeStep())
+    {
+        Job job{};
+
+        string jobname = query1.getColumn(0);
+        string subject = query1.getColumn(1);
+        string datetime = query1.getColumn(2);
+        string selector = query1.getColumn(3);
+        string tmplate = query1.getColumn(4);
+
+        job.set_datetime(datetime);
+        job.set_subject(subject);
+        job.set_template(tmplate);
+        job.set_selector(selector);
+        job.set_jobname(jobname);
+
+        SQLite::Statement query2{db, "SELECT * FROM job_property WHERE jobname = ?"};
+        query2.bind(1, jobname);
+
+        while (query2.executeStep())
+        {
+            string name = query2.getColumn(1);
+            string value = query2.getColumn(2);
+
+            job.set_property(name, value);
+        }
+
+        jobs.push_back(job);
+    }
+
+    return jobs;
+}
+
 void DatabaseHandler::add_job(Job j)
 {
     db.exec("INSERT INTO job VALUES (\"" + j.get_jobname() + "\", \"" +

@@ -16,6 +16,7 @@ public:
     void add_receipent(Receipent r);
     void delete_all_receipents();
     std::vector<Receipent> get_all_receipents();
+    std::vector<Job> get_all_jobs();
     void add_job(Job j);
     std::optional<Job> get_job(std::string jobname);
     void delete_job(Job j);
