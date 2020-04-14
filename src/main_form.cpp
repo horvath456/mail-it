@@ -19,10 +19,13 @@ MainForm::MainForm()
     list.append_header("Name");
     list.append_header("Age");
 
+    tb1.create(*this);
+
     place.bind(*this);
-    place.div("vert<menubar weight=28><listbox>");
+    place.div("vert<menubar weight=28> <listbox>|60vert<inputs weight=20>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
+    place.field("inputs") << tb1;
     place.collocate();
 }
 
