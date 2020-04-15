@@ -14,6 +14,8 @@ public:
 
 private:
     void make_menus();
+
+public:
     nana::place place;
     nana::menubar menubar;
     nana::listbox list;

@@ -16,8 +16,7 @@ MainForm::MainForm()
     make_menus();
 
     list.create(*this);
-    list.append_header("Name");
-    list.append_header("Age");
+    list.append_header("Jobname");
 
     tb1.create(*this);
 
