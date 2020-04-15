@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <stdexcept>
 
 #include "receipent.h"
 #include "job.h"
@@ -18,14 +19,14 @@ DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE |
             "vorname VARCHAR(255),"
             "nachname VARCHAR(255),"
             "email VARCHAR(255),"
-            "primary key(firstname, lastname))");
+            "primary key(vorname, nachname))");
     db.exec("CREATE TABLE IF NOT EXISTS receipent_property ("
-            "firstname VARCHAR(255),"
-            "lastname VARCHAR(255),"
+            "vorname VARCHAR(255),"
+            "nachname VARCHAR(255),"
             "name VARCHAR(255),"
             "value VARCHAR(255),"
-            "foreign key(firstname, lastname) references receipent,"
-            "primary key(firstname, lastname, name))");
+            "foreign key(vorname, nachname) references receipent,"
+            "primary key(vorname, nachname, name))");
     db.exec("CREATE TABLE IF NOT EXISTS job ("
             "jobname VARCHAR(255),"
             "subject VARCHAR(255),"
@@ -141,6 +142,10 @@ vector<Job> DatabaseHandler::get_all_jobs()
 
 void DatabaseHandler::add_job(Job j)
 {
+    if(get_job(j.get_jobname())) {
+       throw invalid_argument("Job with that name already exists");
+    }
+
     db.exec("INSERT INTO job VALUES (\"" + j.get_jobname() + "\", \"" +
             j.get_subject() + "\", \"" + j.get_datetime() + "\", \"" +
             j.get_selector() + "\", \"" + j.get_template() + "\")");
