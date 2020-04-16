@@ -36,8 +36,14 @@ nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
 
 int main()
 {
-    MailHandler mailer{"host", 443, "user", "pw"};
     DatabaseHandler db{};
+    MailHandler mailer{};
+
+    if (db.get_config())
+    {
+        Config cfg{db.get_config()};
+        mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
+    }
 
     MainForm main_form;
 
