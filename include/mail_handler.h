@@ -12,6 +12,8 @@ class MailHandler
 {
 public:
     MailHandler(std::string host, int port, std::string username, std::string passwd);
+    MailHandler();
+    void set_config(std::string host, int port, std::string username, std::string passwd);
     bool send_email(std::string sender, std::string receiver, std::string subject, std::string text);
 
 private:
