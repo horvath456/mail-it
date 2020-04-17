@@ -30,7 +30,7 @@ MainForm::MainForm()
     btn2.create(*this);
 
     place.bind(*this);
-    place.div("vert<menubar weight=28> <listbox>|60vert<><weight=80% vertical<><weight=70% vertical <vertical gap=10 textboxs arrange=[25,25]>  <weight=25 gap=10 buttons> ><>><>");
+    place.div("vert<menubar weight=28> <<listbox>|50<vertical <vertical gap=10 textboxs arrange=[25,25]><weight=25 gap=10 buttons>>>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
     place.field("textboxs") << tb1;
