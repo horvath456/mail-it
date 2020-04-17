@@ -41,7 +41,7 @@ int main()
 
     if (db.get_config())
     {
-        Config cfg{db.get_config()};
+        Config cfg{db.get_config().value()};
         mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
     }
 
