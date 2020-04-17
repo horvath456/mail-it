@@ -4,6 +4,8 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/menubar.hpp>
 #include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/button.hpp>
 #include <nana/gui/place.hpp>
 
 using namespace nana;
@@ -19,12 +21,22 @@ MainForm::MainForm()
     list.append_header("Jobname");
 
     tb1.create(*this);
+    tb1.tip_string("User:").multi_lines(false);
+
+    tb2.create(*this);
+    tb2.tip_string("Password:").multi_lines(true);
+
+    btn1.create(*this);
+    btn2.create(*this);
 
     place.bind(*this);
-    place.div("vert<menubar weight=28> <listbox>|60vert<inputs weight=20>");
+    place.div("vert<menubar weight=28> <listbox>|60vert<><weight=80% vertical<><weight=70% vertical <vertical gap=10 textboxs arrange=[25,25]>  <weight=25 gap=10 buttons> ><>><>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
-    place.field("inputs") << tb1;
+    place.field("textboxs") << tb1;
+    place.field("textboxs") << tb2;
+    place.field("buttons") << btn1;
+    place.field("buttons") << btn2;
     place.collocate();
 }
 
