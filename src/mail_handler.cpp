@@ -18,11 +18,11 @@ MailHandler::MailHandler(string host, int port, string username, string passwd)
                            CMailClient::SslTlsFlag::ENABLE_SSL);
 }
 
-MailHandler::MailHandler()
+MailHandler::MailHandler() : SMTPClient{[](const std::string &) { return; }}
 {
 }
 
-void MailHandler::set_config(std::string host, int port, std::string username, std::string passwd)
+void MailHandler::init_session(string host, int port, string username, string passwd)
 {
     SMTPClient.InitSession(host + ":" + to_string(port), username, passwd,
                            CMailClient::SettingsFlag::ALL_FLAGS,
