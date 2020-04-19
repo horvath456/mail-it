@@ -27,7 +27,7 @@ inc_dirs = include_directories(['include',
                                 get_option('inja_include_dir')])
 
 
-src = ['src/main.cpp', 'src/database_handler.cpp', 'src/mail_handler.cpp', 'src/csv_utils.cpp', 'src/main_form.cpp', 'src/send_job.cpp']
+src = ['src/main.cpp', 'src/database_handler.cpp', 'src/mail_handler.cpp', 'src/csv_utils.cpp', 'src/main_form.cpp', 'src/send_job.cpp', 'src/config_inputbox.cpp']
 
 executable('mail-it', 
            sources : src,
