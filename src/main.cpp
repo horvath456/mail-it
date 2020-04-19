@@ -13,6 +13,7 @@
 #include "csv_utils.h"
 
 #include "main_form.h"
+#include "config_inputbox.h"
 
 using namespace std;
 
@@ -46,6 +47,9 @@ int main()
     }
 
     MainForm main_form;
+
+    ConfigInputbox cfg_form{main_form};
+    cfg_form.show();
 
     vector<Job> all_jobs = db.get_all_jobs();
 
