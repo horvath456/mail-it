@@ -62,10 +62,9 @@ int main()
     cfg_form.show();
 
     vector<Job> all_jobs = db.get_all_jobs();
-
-    for (size_t i = 0; i < all_jobs.size(); i++)
+    for (auto &job : all_jobs)
     {
-        main_form.list.at(i).append(all_jobs.at(i));
+        main_form.list.at(0).append(job);
     }
 
     main_form.show();
