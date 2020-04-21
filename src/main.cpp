@@ -19,9 +19,6 @@
 
 using namespace std;
 
-DatabaseHandler db{};
-MailHandler mailer{};
-
 nana::listbox::oresolver &operator<<(nana::listbox::oresolver &orr, Job &job)
 {
     orr << job.get_jobname();
@@ -40,22 +37,24 @@ nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
     return orr;
 }
 
-void delete_all_receipents()
-{
-
-}
-
-void import_receipents()
-{
-}
-
 int main()
 {
+    DatabaseHandler db{};
+    MailHandler mailer{};
+
     if (db.get_config())
     {
         Config cfg{db.get_config().value()};
         mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
     }
+
+    auto delete_all_receipents = [&]() {
+        db.delete_all_receipents();
+    };
+
+    auto import_receipents = [&]() {
+
+    };
 
     MainForm main_form{delete_all_receipents, import_receipents};
 
