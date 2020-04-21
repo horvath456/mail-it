@@ -1,5 +1,8 @@
 #include "main_form.h"
 
+#include <functional>
+#include <utility>
+
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/menubar.hpp>
@@ -10,7 +13,9 @@
 
 using namespace nana;
 
-MainForm::MainForm()
+MainForm::MainForm(std::function<void()> delete_all_receipents,
+                   std::function<void()> import_receipents) : delete_all_receipents{delete_all_receipents},
+                                                              import_receipents{import_receipents}
 {
     caption("mit - Mail It");
 
@@ -42,14 +47,11 @@ MainForm::MainForm()
 
 void MainForm::make_menus()
 {
-    menubar.push_back("&FILE");
-    menubar.at(0).append("New", [this](menu::item_proxy &) {
-
+    menubar.push_back("&Receipents");
+    menubar.at(0).append("Alle löschen", [this](menu::item_proxy &) {
+        delete_all_receipents();
     });
-    menubar.at(0).append("Open", [this](menu::item_proxy &) {
-
-    });
-    menubar.at(0).append("Save", [this](menu::item_proxy &) {
-
+    menubar.at(0).append("Importieren", [this](menu::item_proxy &) {
+        import_receipents();
     });
 }

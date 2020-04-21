@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <functional>
+#include <utility>
 
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 
@@ -16,6 +18,9 @@
 #include "config_inputbox.h"
 
 using namespace std;
+
+DatabaseHandler db{};
+MailHandler mailer{};
 
 nana::listbox::oresolver &operator<<(nana::listbox::oresolver &orr, Job &job)
 {
@@ -35,18 +40,24 @@ nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
     return orr;
 }
 
+void delete_all_receipents()
+{
+
+}
+
+void import_receipents()
+{
+}
+
 int main()
 {
-    DatabaseHandler db{};
-    MailHandler mailer{};
-
     if (db.get_config())
     {
         Config cfg{db.get_config().value()};
         mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
     }
 
-    MainForm main_form;
+    MainForm main_form{delete_all_receipents, import_receipents};
 
     ConfigInputbox cfg_form{main_form};
     cfg_form.show();

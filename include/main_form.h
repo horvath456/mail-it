@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <utility>
+
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/menubar.hpp>
@@ -11,10 +14,12 @@
 class MainForm : public nana::form
 {
 public:
-    MainForm();
+    MainForm(std::function<void()>, std::function<void()>);
 
 private:
     void make_menus();
+    std::function<void()> delete_all_receipents;
+    std::function<void()> import_receipents;
 
 public:
     nana::place place;
