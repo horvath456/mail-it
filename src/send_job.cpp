@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <functional>
+#include <utility>
 
 #include <nlohmann/json.hpp>
 #include <inja.hpp>
@@ -117,7 +119,7 @@ bool selector_includes_receipent(string selector, Receipent r)
     return true;
 }
 
-void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipents, void (*send)(string, string, string))
+void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipents, function<void(string, string, string)> send)
 {
     csv::Reader reader;
     reader.read(jobfile);
