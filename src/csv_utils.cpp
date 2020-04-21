@@ -14,7 +14,7 @@
 
 using namespace std;
 
-vector<Receipent> CSV::read_recipient_list(string filename)
+vector<Receipent> CSV::read_receipent_list(string filename)
 {
     vector<Receipent> result{};
 

@@ -14,6 +14,6 @@
 #include "receipent.h"
 
 namespace CSV {
-    std::vector<Receipent> read_recipient_list(std::string filename);
+    std::vector<Receipent> read_receipent_list(std::string filename);
     std::vector<std::map<std::string, std::string>> read_jobfile(std::string filename);
 }

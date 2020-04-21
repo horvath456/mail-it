@@ -6,6 +6,9 @@
 
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 
+#include <nana/gui.hpp>
+#include <nana/gui/filebox.hpp>
+
 #include "config.h"
 #include "job.h"
 #include "receipent.h"
@@ -53,7 +56,21 @@ int main()
     };
 
     auto import_receipents = [&]() {
+        nana::filebox fb(0, true);
+        fb.add_filter(("CSV File"), ("*.csv"));
+        fb.add_filter(("All Files"), ("*.*"));
 
+        auto files = fb();
+        if (!files.empty())
+        {
+            db.delete_all_receipents();
+            string file = files.front().string();
+            vector<Receipent> receipents = CSV::read_receipent_list(file);
+            for (Receipent &r : receipents)
+            {
+                db.add_receipent(r);
+            }
+        }
     };
 
     MainForm main_form{delete_all_receipents, import_receipents};
