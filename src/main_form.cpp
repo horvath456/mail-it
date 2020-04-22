@@ -9,6 +9,7 @@
 #include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
+#include <nana/basic_types.hpp>
 #include <nana/gui/place.hpp>
 
 using namespace nana;
@@ -32,10 +33,13 @@ MainForm::MainForm(std::function<void()> delete_all_receipents,
     tb2.tip_string("Password:").multi_lines(true);
 
     btn1.create(*this);
+    btn1.caption("Senden simulieren");
+
     btn2.create(*this);
+    btn2.caption("Job senden");
 
     place.bind(*this);
-    place.div("vert<menubar weight=28> <<listbox>|50<vertical <vertical gap=10 textboxs arrange=[25,25]><weight=25 gap=10 buttons>>>");
+    place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 textboxs arrange=[25,25]><weight=25 gap=10 buttons>>>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
     place.field("textboxs") << tb1;
