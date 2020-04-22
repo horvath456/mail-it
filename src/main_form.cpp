@@ -27,10 +27,16 @@ MainForm::MainForm(std::function<void()> delete_all_receipents,
     list.append_header("Jobname");
 
     tb1.create(*this);
-    tb1.tip_string("User:").multi_lines(false);
+    tb1.tip_string("Jobname:").multi_lines(false);
 
     tb2.create(*this);
-    tb2.tip_string("Password:").multi_lines(true);
+    tb2.tip_string("Subject:").multi_lines(false);
+
+    tb3.create(*this);
+    tb3.tip_string("Template:").multi_lines(true);
+
+    tb4.create(*this);
+    tb4.tip_string("Selector:").multi_lines(true);
 
     btn1.create(*this);
     btn1.caption("Senden simulieren");
@@ -39,11 +45,13 @@ MainForm::MainForm(std::function<void()> delete_all_receipents,
     btn2.caption("Job senden");
 
     place.bind(*this);
-    place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 textboxs arrange=[25,25]><weight=25 gap=10 buttons>>>");
+    place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
     place.field("textboxs") << tb1;
     place.field("textboxs") << tb2;
+    place.field("textboxs") << tb3;
+    place.field("textboxs") << tb4;
     place.field("buttons") << btn1;
     place.field("buttons") << btn2;
     place.collocate();

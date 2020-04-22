@@ -27,6 +27,8 @@ public:
     nana::listbox list;
     nana::textbox tb1;
     nana::textbox tb2;
+    nana::textbox tb3;
+    nana::textbox tb4;
     nana::button btn1;
     nana::button btn2;
 };
