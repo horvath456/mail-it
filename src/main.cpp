@@ -44,6 +44,7 @@ int main()
 {
     DatabaseHandler db{};
     MailHandler mailer{};
+    MainForm main_form{};
 
     if (db.get_config())
     {
@@ -73,10 +74,24 @@ int main()
         }
     };
 
-    MainForm main_form{delete_all_receipents, import_receipents};
+    auto new_job = [&]() {
+        ConfigInputbox cfg_form{main_form};
+        cfg_form.show();
+    };
 
-    ConfigInputbox cfg_form{main_form};
-    cfg_form.show();
+    auto email_cfg = [&]() {
+
+    };
+
+    auto template_cfg = [&]() {
+
+    };
+
+    main_form.set_delete_all_receipents_function(delete_all_receipents);
+    main_form.set_import_receipents_function(import_receipents);
+    main_form.set_new_job_function(new_job);
+    main_form.set_email_cfg_function(email_cfg);
+    main_form.set_template_cfg_function(template_cfg);
 
     vector<Job> all_jobs = db.get_all_jobs();
     for (auto &job : all_jobs)

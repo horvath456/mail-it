@@ -14,9 +14,7 @@
 
 using namespace nana;
 
-MainForm::MainForm(std::function<void()> delete_all_receipents,
-                   std::function<void()> import_receipents) : delete_all_receipents{delete_all_receipents},
-                                                              import_receipents{import_receipents}
+MainForm::MainForm()
 {
     caption("mit - Mail It");
 
@@ -59,8 +57,13 @@ MainForm::MainForm(std::function<void()> delete_all_receipents,
 
 void MainForm::make_menus()
 {
+    menubar.push_back("&Jobs");
     menubar.push_back("&Receipents");
-    menubar.at(0).append("Alle löschen", [this](menu::item_proxy &) {
+    menubar.push_back("&Konfiguration");
+    menubar.at(0).append("Neuer Job", [this](menu::item_proxy &) {
+        new_job();
+    });
+    menubar.at(1).append("Alle löschen", [this](menu::item_proxy &) {
         msgbox mb{handle(), "Bestätigung", msgbox::yes_no};
         mb.icon(mb.icon_question);
         mb << "Wollen Sie wirklich alle Receipents löschen?";
@@ -69,7 +72,38 @@ void MainForm::make_menus()
             delete_all_receipents();
         }
     });
-    menubar.at(0).append("Importieren", [this](menu::item_proxy &) {
+    menubar.at(1).append("Importieren", [this](menu::item_proxy &) {
         import_receipents();
     });
+    menubar.at(2).append("Email-Zugangsdaten", [this](menu::item_proxy &) {
+        email_cfg();
+    });
+    menubar.at(2).append("Default-Template", [this](menu::item_proxy &) {
+        template_cfg();
+    });
+}
+
+void MainForm::set_delete_all_receipents_function(std::function<void()> f)
+{
+    delete_all_receipents = f;
+}
+
+void MainForm::set_import_receipents_function(std::function<void()> f)
+{
+    import_receipents = f;
+}
+
+void MainForm::set_new_job_function(std::function<void()> f)
+{
+    new_job = f;
+}
+
+void MainForm::set_email_cfg_function(std::function<void()> f)
+{
+    email_cfg = f;
+}
+
+void MainForm::set_template_cfg_function(std::function<void()> f)
+{
+    template_cfg = f;
 }
