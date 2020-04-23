@@ -25,6 +25,9 @@ public:
     void set_new_job_function(std::function<void()>);
     void set_email_cfg_function(std::function<void()>);
     void set_template_cfg_function(std::function<void()>);
+    void set_send_job_function(std::function<void(Job job)>);
+    void set_simulate_send_job_function(std::function<void(Job job)>);
+    void set_delete_job_function(std::function<void(Job job)>);
 
     void update_listbox(std::vector<Job> jobs);
 
@@ -32,12 +35,16 @@ private:
     void make_menus();
 
     std::vector<Job> all_jobs;
+    Job selected_job;
 
     std::function<void()> delete_all_receipents;
     std::function<void()> import_receipents;
     std::function<void()> new_job;
     std::function<void()> email_cfg;
     std::function<void()> template_cfg;
+    std::function<void(Job job)> send_job;
+    std::function<void(Job job)> simulate_send_job;
+    std::function<void(Job job)> delete_job;
 
     nana::place place;
     nana::menubar menubar;

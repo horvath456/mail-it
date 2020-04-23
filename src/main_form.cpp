@@ -65,10 +65,15 @@ MainForm::MainForm()
                     job = j;
                 }
             }
+            selected_job = job;
             tb1.reset(job.get_jobname());
             tb2.reset(job.get_subject());
             tb3.reset(job.get_template());
             tb4.reset(job.get_selector());
+        }
+        else
+        {
+            selected_job = {};
         }
     });
 
@@ -86,12 +91,21 @@ MainForm::MainForm()
 
     btn1.create(*this);
     btn1.caption("Senden simulieren");
+    btn1.events().click([this]() {
+        send_job(selected_job);
+    });
 
     btn2.create(*this);
     btn2.caption("Job senden");
+    btn2.events().click([this]() {
+        simulate_send_job(selected_job);
+    });
 
     btn3.create(*this);
     btn3.caption("Job löschen");
+    btn3.events().click([this]() {
+        delete_job(selected_job);
+    });
 
     place.bind(*this);
     place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
@@ -152,6 +166,21 @@ void MainForm::set_email_cfg_function(std::function<void()> f)
 void MainForm::set_template_cfg_function(std::function<void()> f)
 {
     template_cfg = f;
+}
+
+void MainForm::set_send_job_function(std::function<void(Job job)> f)
+{
+    send_job = f;
+}
+
+void MainForm::set_simulate_send_job_function(std::function<void(Job job)> f)
+{
+    simulate_send_job = f;
+}
+
+void MainForm::set_delete_job_function(std::function<void(Job job)> f)
+{
+    delete_job = f;
 }
 
 void MainForm::update_listbox(std::vector<Job> jobs)

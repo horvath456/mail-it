@@ -14,6 +14,7 @@
 #include "database_handler.h"
 #include "mail_handler.h"
 #include "csv_utils.h"
+#include "send_job.h"
 
 #include "main_form.h"
 #include "email_config_inputbox.h"
@@ -115,11 +116,51 @@ int main()
         }
     };
 
+    auto send_job = [&](Job job) {
+        nana::filebox fb(0, true);
+        fb.add_filter(("CSV File"), ("*.csv"));
+        fb.add_filter(("All Files"), ("*.*"));
+
+        auto files = fb();
+        if (!files.empty())
+        {
+            string jobfile = files.front().string();
+            JobSender::send_job(job, jobfile, db.get_all_receipents(),
+                                [&](string email_receiver, string subject, string email_contents) {
+                                    cout << email_receiver << subject << email_contents << endl;
+                                });
+        }
+    };
+
+    auto simulate_send_job = [&](Job job) {
+        nana::filebox fb(0, true);
+        fb.add_filter(("CSV File"), ("*.csv"));
+        fb.add_filter(("All Files"), ("*.*"));
+
+        auto files = fb();
+        if (!files.empty())
+        {
+            string jobfile = files.front().string();
+            JobSender::send_job(job, jobfile, db.get_all_receipents(),
+                                [&](string email_receiver, string subject, string email_contents) {
+                                    cout << email_receiver << subject << email_contents << endl;
+                                });
+        }
+    };
+
+    auto delete_job = [&](Job job) {
+        db.delete_job(job);
+        main_form.update_listbox(db.get_all_jobs());
+    };
+
     main_form.set_delete_all_receipents_function(delete_all_receipents);
     main_form.set_import_receipents_function(import_receipents);
     main_form.set_new_job_function(new_job);
     main_form.set_email_cfg_function(email_cfg);
     main_form.set_template_cfg_function(template_cfg);
+    main_form.set_send_job_function(send_job);
+    main_form.set_simulate_send_job_function(simulate_send_job);
+    main_form.set_delete_job_function(delete_job);
 
     main_form.update_listbox(db.get_all_jobs());
 
