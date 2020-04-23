@@ -80,7 +80,6 @@ private:
         btn_.create(wd);
         btn_.caption("Löschen");
         btn_.events().click([this] {
-            //Delete the item when button is clicked
             auto &lsbox = dynamic_cast<listbox &>(indicator_->host());
             lsbox.erase(lsbox.at(pos_));
         });
@@ -179,9 +178,18 @@ bool NewJobForm::saved()
 Job NewJobForm::get_value()
 {
     Job job{};
+
     job.set_jobname(tb_jobname.text());
     job.set_selector(tb_selector.text());
     job.set_template(tb_template.text());
     job.set_subject(tb_subject.text());
+
+    for (auto &entry : job_properties_listbox.at(0))
+    {
+        string name = entry.text(0);
+        string value = entry.text(1);
+        job.set_property(name, value);
+    }
+
     return job;
 }
