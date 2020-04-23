@@ -199,6 +199,7 @@ void MainForm::set_delete_job_function(std::function<void(Job job)> f)
 void MainForm::update_listbox(std::vector<Job> jobs)
 {
     list.auto_draw(false);
+    list.clear();
     for (auto &job : jobs)
     {
         list.at(0).append(job);
