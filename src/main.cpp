@@ -19,7 +19,7 @@
 
 #include "main_form.h"
 #include "email_config_inputbox.h"
-#include "template_config_inputbox.h"
+#include "template_config_form.h"
 
 using namespace std;
 
@@ -86,13 +86,14 @@ int main()
     };
 
     auto email_cfg = [&]() {
-        EmailConfigInputbox cfg_form{main_form};
-        cfg_form.show();
+        EmailConfigInputbox email_cfg{main_form};
+        email_cfg.show();
     };
 
     auto template_cfg = [&]() {
-        TemplateConfigInputbox cfg_form{main_form};
+        TemplateConfigForm cfg_form{};
         cfg_form.show();
+        nana::exec();
     };
 
     main_form.set_delete_all_receipents_function(delete_all_receipents);
