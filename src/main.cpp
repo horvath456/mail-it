@@ -86,8 +86,21 @@ int main()
     };
 
     auto email_cfg = [&]() {
-        EmailConfigInputbox email_cfg{main_form};
-        email_cfg.show();
+        Config cfg;
+        if (db.get_config())
+        {
+            cfg = db.get_config().value();
+        }
+        EmailConfigInputbox email_cfg{main_form, cfg.host, cfg.port, cfg.username, cfg.passwd};
+        if (email_cfg.show())
+        {
+            cfg.host = email_cfg.get_host();
+            cfg.port = email_cfg.get_port();
+            cfg.username = email_cfg.get_username();
+            cfg.passwd = email_cfg.get_password();
+            db.set_config(cfg);
+            mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
+        }
     };
 
     auto template_cfg = [&]() {

@@ -6,11 +6,11 @@
 using namespace nana;
 using namespace std;
 
-EmailConfigInputbox::EmailConfigInputbox(form frm) : inbox{frm, "Bitte die Email-Zugangsdaten eingeben.", "Email-Zugangsdaten"},
-                                           host{"Host"},
-                                           port{"Port", 0, 0, 65535, 1},
-                                           username{"Username"},
-                                           password{"Passwort"}
+EmailConfigInputbox::EmailConfigInputbox(form frm, string host_v, int port_v, string username_v, string password_v) : inbox{frm, "Bitte die Email-Zugangsdaten eingeben.", "Email-Zugangsdaten"},
+                                                                                                                      host{"Host", host_v},
+                                                                                                                      port{"Port", port_v, 0, 65535, 1},
+                                                                                                                      username{"Username", username_v},
+                                                                                                                      password{"Passwort", password_v}
 
 {
     //Sets a verifier

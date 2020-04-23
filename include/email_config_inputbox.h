@@ -6,7 +6,7 @@
 class EmailConfigInputbox
 {
 public:
-    EmailConfigInputbox(nana::form frm);
+    EmailConfigInputbox(nana::form frm, std::string host_v, int port_v, std::string username_v, std::string password_v);
     bool show();
     std::string get_host();
     int get_port();
