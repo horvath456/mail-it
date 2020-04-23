@@ -66,6 +66,7 @@ MainForm::MainForm()
                 }
             }
             selected_job = job;
+            is_job_selected = true;
             tb_jobname.reset(job.get_jobname());
             tb_subject.reset(job.get_subject());
             tb_template.reset(job.get_template());
@@ -77,6 +78,7 @@ MainForm::MainForm()
         else
         {
             selected_job = {};
+            is_job_selected = false;
             tb_jobname.reset("");
             tb_subject.reset("");
             tb_template.reset("");
@@ -211,4 +213,30 @@ void MainForm::update_listbox(std::vector<Job> jobs)
     tb_subject.reset(selected_job.get_subject());
     tb_template.reset(selected_job.get_template());
     tb_selector.reset(selected_job.get_selector());
+
+    if (is_job_selected)
+    {
+        btn_send.enabled(selected_job.get_datetime() == "");
+        btn_simulate_send.enabled(true);
+        btn_delete_job.enabled(true);
+    }
+    else
+    {
+        btn_send.enabled(false);
+        btn_simulate_send.enabled(false);
+        btn_delete_job.enabled(false);
+    }
+}
+
+void MainForm::remove_selection()
+{
+    is_job_selected = false;
+    selected_job = {};
+    tb_jobname.reset("");
+    tb_subject.reset("");
+    tb_template.reset("");
+    tb_selector.reset("");
+    btn_send.enabled(false);
+    btn_simulate_send.enabled(false);
+    btn_delete_job.enabled(false);
 }

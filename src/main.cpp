@@ -294,6 +294,7 @@ int main()
         try
         {
             db.delete_job(job);
+            main_form.remove_selection();
             main_form.update_listbox(db.get_all_jobs());
         }
         catch (...)

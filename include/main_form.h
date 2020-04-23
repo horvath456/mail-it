@@ -30,12 +30,14 @@ public:
     void set_delete_job_function(std::function<void(Job job)>);
 
     void update_listbox(std::vector<Job> jobs);
+    void remove_selection();
 
 private:
     void make_menus();
 
     std::vector<Job> all_jobs;
     Job selected_job;
+    bool is_job_selected = false;
 
     std::function<void()> delete_all_receipents;
     std::function<void()> import_receipents;
