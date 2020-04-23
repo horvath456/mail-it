@@ -19,6 +19,7 @@ bool string_ends_with(const std::string &str, const std::string &suffix);
 bool string_starts_with(const std::string &str, const std::string &prefix);
 std::string get_date_string();
 void show_error_message_box(std::string title, std::string text);
+void show_info_message_box(std::string title, std::string text);
 bool show_confirmation_message_box(std::string title, std::string text);
 std::optional<std::string> show_csv_file_selector_box(std::string title);
 std::string get_ISO_8601_datetime();

@@ -67,6 +67,14 @@ void Util::show_error_message_box(std::string title, std::string text)
     mb.show();
 }
 
+void Util::show_info_message_box(std::string title, std::string text)
+{
+    nana::msgbox mb{0, title, nana::msgbox::ok};
+    mb.icon(mb.icon_information);
+    mb << text;
+    mb.show();
+}
+
 bool Util::show_confirmation_message_box(std::string title, std::string text)
 {
     nana::msgbox mb{0, title, nana::msgbox::yes_no};

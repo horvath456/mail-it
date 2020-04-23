@@ -32,16 +32,32 @@ int main()
     MailHandler mailer{};
     MainForm main_form{};
 
-    if (db.get_config())
+    try
     {
-        Config cfg{db.get_config().value()};
-        mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
+        if (db.get_config())
+        {
+            Config cfg{db.get_config().value()};
+            mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
+        }
+    }
+    catch (...)
+    {
+        show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
+        return -1;
     }
 
     auto delete_all_receipents = [&]() {
-        if (show_confirmation_message_box("Bestätigung", "Wollen Sie wirklich alle Receipents löschen?"))
+        if (!show_confirmation_message_box("Bestätigung", "Wollen Sie wirklich alle Receipents löschen?"))
+        {
+            return;
+        }
+        try
         {
             db.delete_all_receipents();
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Löschen der Receipents ist ein Fehler aufgetreten.");
         }
     };
 
@@ -52,7 +68,15 @@ int main()
             return;
         }
 
-        db.delete_all_receipents();
+        try
+        {
+            db.delete_all_receipents();
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Löschen der Receipents ist ein Fehler aufgetreten.");
+            return;
+        }
 
         try
         {
@@ -61,17 +85,11 @@ int main()
             {
                 db.add_receipent(r);
             }
-            nana::msgbox mb{main_form.handle(), "Importieren erfolgreich", nana::msgbox::ok};
-            mb.icon(mb.icon_information);
-            mb << "Es wurden " << receipents.size() << " Receipents importiert.";
-            mb.show();
+            show_info_message_box("Importieren erfolgreich", "Es wurden " + to_string(receipents.size()) + " Receipents importiert.");
         }
         catch (...)
         {
-            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
-            mb.icon(mb.icon_error);
-            mb << "Beim Importieren der Receipents ist ein Fehler aufgetreten.";
-            mb.show();
+            show_error_message_box("Fehler", "Beim Importieren der Receipents ist ein Fehler aufgetreten.");
         }
     };
 
@@ -81,37 +99,78 @@ int main()
 
     auto email_cfg = [&]() {
         Config cfg;
-        if (db.get_config())
+
+        try
         {
-            cfg = db.get_config().value();
+            if (db.get_config())
+            {
+                cfg = db.get_config().value();
+            }
         }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
+            return;
+        }
+
         EmailConfigInputbox email_cfg{main_form, cfg.host, cfg.port, cfg.username, cfg.passwd};
-        if (email_cfg.show())
+        bool res = email_cfg.show();
+        if (!res)
         {
-            cfg.host = email_cfg.get_host();
-            cfg.port = email_cfg.get_port();
-            cfg.username = email_cfg.get_username();
-            cfg.passwd = email_cfg.get_password();
-            db.set_config(cfg);
-            mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
+            return;
         }
+
+        cfg.host = email_cfg.get_host();
+        cfg.port = email_cfg.get_port();
+        cfg.username = email_cfg.get_username();
+        cfg.passwd = email_cfg.get_password();
+
+        try
+        {
+            db.set_config(cfg);
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Schreiben der Konfiguration ist ein Fehler aufgetreten.");
+        }
+
+        mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
     };
 
     auto template_cfg = [&]() {
         Config cfg;
-        if (db.get_config())
+
+        try
         {
-            cfg = db.get_config().value();
+            if (db.get_config())
+            {
+                cfg = db.get_config().value();
+            }
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
+            return;
         }
 
         TemplateConfigForm cfg_form{cfg.tmplate};
         cfg_form.show();
         nana::exec();
 
-        if (cfg_form.saved())
+        if (!cfg_form.saved())
         {
-            cfg.tmplate = cfg_form.get_value();
+            return;
+        }
+
+        cfg.tmplate = cfg_form.get_value();
+
+        try
+        {
             db.set_config(cfg);
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Schreiben der Konfiguration ist ein Fehler aufgetreten.");
         }
     };
 
@@ -122,40 +181,59 @@ int main()
             return;
         }
 
-        stringstream ss;
-        bool success = true;
-
-        string email_sender = db.get_config().value_or(Config{}).username;
-
-        JobSender::send_job(job, filename.value(), db.get_all_receipents(),
-                            [&](string email_receiver, string subject, string email_contents) {
-                                ss << "From: <" << email_sender << ">\n";
-                                ss << "To: <" << email_receiver << ">\n";
-                                ss << "Subject: " << subject << "\n\n";
-                                ss << email_contents;
-                                ss << "\n\n\n";
-
-                                bool email_send_success = mailer.send_email(email_sender, email_receiver, subject, email_contents);
-                                if (!email_send_success)
-                                {
-                                    success = false;
-                                }
-                            });
-
-        if (!success)
+        try
         {
-            show_error_message_box("Fehler", "Beim Senden ist ein Fehler aufgetreten.");
+            stringstream ss;
+            bool success = true;
+
+            string email_sender = db.get_config().value_or(Config{}).username;
+
+            unsigned int counter = 0;
+            unsigned int successful_counter = 0;
+            unsigned int unsuccessful_counter = 0;
+
+            JobSender::send_job(job, filename.value(), db.get_all_receipents(),
+                                [&](string email_receiver, string subject, string email_contents) {
+                                    ss << "From: <" << email_sender << ">\n";
+                                    ss << "To: <" << email_receiver << ">\n";
+                                    ss << "Subject: " << subject << "\n\n";
+                                    ss << email_contents;
+                                    ss << "\n\n\n";
+
+                                    counter++;
+
+                                    bool email_send_success = mailer.send_email(email_sender, email_receiver, subject, email_contents);
+                                    if (!email_send_success)
+                                    {
+                                        success = false;
+                                        unsuccessful_counter++;
+                                    }
+                                    else
+                                    {
+                                        successful_counter++;
+                                    }
+                                });
+
+            if (!success)
+            {
+                show_error_message_box("Fehler", "Das Versenden der Emails war nicht erfolgreich. Es wurden " +
+                                                     to_string(successful_counter) + " von " + to_string(counter) + " Emails versandt.");
+            }
+            else
+            {
+                ofstream myfile;
+                myfile.open(job.get_jobname() + "_sent.log");
+                myfile << ss.str();
+                myfile.close();
+
+                job.set_datetime(get_ISO_8601_datetime());
+                db.update_job_datetime(job);
+                main_form.update_listbox(db.get_all_jobs());
+            }
         }
-        else
+        catch (...)
         {
-            ofstream myfile;
-            myfile.open(job.get_jobname() + "_sent.log");
-            myfile << ss.str();
-            myfile.close();
-
-            job.set_datetime(get_ISO_8601_datetime());
-            db.update_job_datetime(job);
-            main_form.update_listbox(db.get_all_jobs());
+            show_error_message_box("Fehler", "Beim Versenden des Jobs ist ein Fehler aufgetreten.");
         }
     };
 
@@ -166,25 +244,39 @@ int main()
             return;
         }
 
-        ofstream myfile;
-        myfile.open(job.get_jobname() + "_simulated_sent.log");
+        try
+        {
+            ofstream myfile;
+            myfile.open(job.get_jobname() + "_simulated_sent.log");
 
-        string email_sender = db.get_config().value_or(Config{}).username;
+            string email_sender = db.get_config().value_or(Config{}).username;
 
-        JobSender::send_job(job, filename.value(), db.get_all_receipents(),
-                            [&](string email_receiver, string subject, string email_contents) {
-                                myfile << "From: <" << email_sender << ">\n";
-                                myfile << "To: <" << email_receiver << ">\n";
-                                myfile << "Subject: " << subject << "\n\n";
-                                myfile << email_contents;
-                                myfile << "\n\n\n";
-                            });
-        myfile.close();
+            JobSender::send_job(job, filename.value(), db.get_all_receipents(),
+                                [&](string email_receiver, string subject, string email_contents) {
+                                    myfile << "From: <" << email_sender << ">\n";
+                                    myfile << "To: <" << email_receiver << ">\n";
+                                    myfile << "Subject: " << subject << "\n\n";
+                                    myfile << email_contents;
+                                    myfile << "\n\n\n";
+                                });
+            myfile.close();
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Simulieren des Versendens des Jobs ist ein Fehler aufgetreten.");
+        }
     };
 
     auto delete_job = [&](Job job) {
-        db.delete_job(job);
-        main_form.update_listbox(db.get_all_jobs());
+        try
+        {
+            db.delete_job(job);
+            main_form.update_listbox(db.get_all_jobs());
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Löschen des Jobs ist ein Fehler aufgetreten.");
+        }
     };
 
     main_form.set_delete_all_receipents_function(delete_all_receipents);
