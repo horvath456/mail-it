@@ -1,7 +1,12 @@
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+
 #include "main_form.h"
 
 #include <functional>
 #include <utility>
+#include <string>
+#include <vector>
+#include <iostream>
 
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -12,7 +17,30 @@
 #include <nana/basic_types.hpp>
 #include <nana/gui/place.hpp>
 
+#include "job.h"
+
 using namespace nana;
+using namespace std;
+
+nana::listbox::oresolver &operator<<(nana::listbox::oresolver &orr, Job &job)
+{
+    orr << job.get_jobname();
+    return orr;
+}
+
+std::ostream &operator<<(std::ostream &orr, Job &job)
+{
+    orr << job.get_jobname();
+    return orr;
+}
+
+nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
+{
+    std::string jobname;
+    orr >> jobname;
+    job.set_jobname(jobname);
+    return orr;
+}
 
 MainForm::MainForm()
 {
@@ -24,6 +52,25 @@ MainForm::MainForm()
     list.create(*this);
     list.append_header("Jobname");
     list.enable_single(true, false);
+    list.events().selected([&]() {
+        if (list.selected().size() > 0)
+        {
+            int item = list.selected().at(0).item;
+            Job job;
+            string jobname = list.at(0).at(item).text(0);
+            for (Job j : all_jobs)
+            {
+                if (j.get_jobname() == jobname)
+                {
+                    job = j;
+                }
+            }
+            tb1.reset(job.get_jobname());
+            tb2.reset(job.get_subject());
+            tb3.reset(job.get_template());
+            tb4.reset(job.get_selector());
+        }
+    });
 
     tb1.create(*this);
     tb1.tip_string("Jobname:").multi_lines(false);
@@ -105,4 +152,15 @@ void MainForm::set_email_cfg_function(std::function<void()> f)
 void MainForm::set_template_cfg_function(std::function<void()> f)
 {
     template_cfg = f;
+}
+
+void MainForm::update_listbox(std::vector<Job> jobs)
+{
+    list.auto_draw(false);
+    for (auto &job : jobs)
+    {
+        list.at(0).append(job);
+    }
+    list.auto_draw(true);
+    all_jobs = jobs;
 }

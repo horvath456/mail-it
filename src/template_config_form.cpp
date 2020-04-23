@@ -19,7 +19,7 @@ TemplateConfigForm::TemplateConfigForm(string tmplate)
 
     tb1.create(*this);
     tb1.tip_string("Template:").multi_lines(true);
-    tb1.append(tmplate, false);
+    tb1.reset(tmplate);
 
     btn1.create(*this);
     btn1.caption("Speichern");

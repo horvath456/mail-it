@@ -4,8 +4,6 @@
 #include <functional>
 #include <utility>
 
-#pragma GCC diagnostic ignored "-Wdeprecated-copy"
-
 #include <nana/gui.hpp>
 #include <nana/gui/filebox.hpp>
 
@@ -22,24 +20,6 @@
 #include "template_config_form.h"
 
 using namespace std;
-
-nana::listbox::oresolver &operator<<(nana::listbox::oresolver &orr, Job &job)
-{
-    orr << job.get_jobname();
-    return orr;
-}
-std::ostream &operator<<(std::ostream &orr, Job &job)
-{
-    orr << job.get_jobname();
-    return orr;
-}
-nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
-{
-    string jobname;
-    orr >> jobname;
-    job.set_jobname(jobname);
-    return orr;
-}
 
 int main()
 {
@@ -141,21 +121,7 @@ int main()
     main_form.set_email_cfg_function(email_cfg);
     main_form.set_template_cfg_function(template_cfg);
 
-    vector<Job> all_jobs = db.get_all_jobs();
-    main_form.list.auto_draw(false);
-    for (auto &job : all_jobs)
-    {
-        main_form.list.at(0).append(job);
-    }
-    main_form.list.auto_draw(true);
-
-    main_form.list.events().selected([&]() {
-        if (main_form.list.selected().size() > 0)
-        {
-            int item = main_form.list.selected().at(0).item;
-            cout << item << endl;
-        }
-    });
+    main_form.update_listbox(db.get_all_jobs());
 
     main_form.show();
     nana::API::window_size(main_form, {700, 400});

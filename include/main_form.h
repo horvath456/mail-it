@@ -2,6 +2,8 @@
 
 #include <functional>
 #include <utility>
+#include <string>
+#include <vector>
 
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -10,6 +12,8 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/place.hpp>
+
+#include "job.h"
 
 class MainForm : public nana::form
 {
@@ -22,15 +26,19 @@ public:
     void set_email_cfg_function(std::function<void()>);
     void set_template_cfg_function(std::function<void()>);
 
+    void update_listbox(std::vector<Job> jobs);
+
 private:
     void make_menus();
+
+    std::vector<Job> all_jobs;
+
     std::function<void()> delete_all_receipents;
     std::function<void()> import_receipents;
     std::function<void()> new_job;
     std::function<void()> email_cfg;
     std::function<void()> template_cfg;
 
-public:
     nana::place place;
     nana::menubar menubar;
     nana::listbox list;
