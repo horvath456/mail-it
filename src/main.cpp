@@ -310,7 +310,7 @@ int main()
     main_form.update_listbox(db.get_all_jobs());
 
     main_form.show();
-    nana::API::window_size(main_form, {700, 400});
+    nana::API::window_size(main_form, {750, 450});
 
     nana::exec();
 

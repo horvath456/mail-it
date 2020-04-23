@@ -44,7 +44,7 @@ MainForm::MainForm()
             int item = all_jobs_listbox.selected().at(0).item;
             Job job;
             string jobname = all_jobs_listbox.at(0).at(item).text(0);
-            for (const Job& j : all_jobs)
+            for (const Job &j : all_jobs)
             {
                 if (j.get_jobname() == jobname)
                 {

@@ -27,4 +27,5 @@ private:
     nana::textbox tb_template;
     nana::textbox tb_selector;
     nana::button btn_create;
+    nana::button btn_add_property;
 };
