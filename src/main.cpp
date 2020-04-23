@@ -83,7 +83,7 @@ int main()
         try
         {
             vector<Receipent> receipents = CSV::read_receipent_list(filename.value());
-            for (Receipent &r : receipents)
+            for (const Receipent &r : receipents)
             {
                 db.add_receipent(r);
             }

@@ -21,9 +21,9 @@ struct Receipent : public PropertyItem
         properties["email"] = Property{email};
     }
 
-    std::string get_first_name()
+    std::string get_first_name () const
     {
-        return properties["vorname"].value;
+        return properties.at("vorname").value;
     }
 
     void set_first_name(std::string v)
@@ -31,9 +31,9 @@ struct Receipent : public PropertyItem
         properties["vorname"] = Property{v};
     }
 
-    std::string get_last_name()
+    std::string get_last_name () const
     {
-        return properties["nachname"].value;
+        return properties.at("nachname").value;
     }
 
     void set_last_name(std::string v)
@@ -41,9 +41,9 @@ struct Receipent : public PropertyItem
         properties["nachname"] = Property{v};
     }
 
-    std::string get_email()
+    std::string get_email () const
     {
-        return properties["email"].value;
+        return properties.at("email").value;
     }
 
     void set_email(std::string v)
@@ -51,11 +51,11 @@ struct Receipent : public PropertyItem
         properties["email"] = Property{v};
     }
 
-    std::map<std::string, std::string> get_other_properties()
+    std::map<std::string, std::string> get_other_properties () const
     {
         std::map<std::string, std::string> result{};
 
-        for (auto el : properties)
+        for (const auto& el : properties)
         {
             if (el.first != "vorname" && el.first != "nachname" &&
                 el.first != "email")

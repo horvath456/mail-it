@@ -30,6 +30,7 @@ public:
     void set_delete_job_function(std::function<void(Job job)>);
 
     void update_listbox(std::vector<Job> jobs);
+    void update_selected_job();
     void remove_selection();
 
 private:
@@ -51,6 +52,7 @@ private:
     nana::place place;
     nana::menubar menubar;
     nana::listbox all_jobs_listbox;
+    nana::listbox job_properties_listbox;
     nana::textbox tb_jobname;
     nana::textbox tb_subject;
     nana::textbox tb_datetime;

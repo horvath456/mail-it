@@ -13,11 +13,11 @@ struct Job : public PropertyItem
         properties["template"] = Property{};
     }
 
-    std::map<std::string, std::string> get_other_properties()
+    std::map<std::string, std::string> get_other_properties() const
     {
         std::map<std::string, std::string> result{};
 
-        for (auto el : properties)
+        for (const auto &el : properties)
         {
             if (el.first != "jobname" && el.first != "subject" &&
                 el.first != "datetime" && el.first != "selector" &&
@@ -30,9 +30,9 @@ struct Job : public PropertyItem
         return result;
     }
 
-    std::string get_jobname()
+    std::string get_jobname() const
     {
-        return properties["jobname"].value;
+        return properties.at("jobname").value;
     }
 
     void set_jobname(std::string v)
@@ -40,9 +40,9 @@ struct Job : public PropertyItem
         properties["jobname"] = Property{v};
     }
 
-    std::string get_subject()
+    std::string get_subject() const
     {
-        return properties["subject"].value;
+        return properties.at("subject").value;
     }
 
     void set_subject(std::string v)
@@ -50,9 +50,9 @@ struct Job : public PropertyItem
         properties["subject"] = Property{v};
     }
 
-    std::string get_datetime()
+    std::string get_datetime() const
     {
-        return properties["datetime"].value;
+        return properties.at("datetime").value;
     }
 
     void set_datetime(std::string v)
@@ -60,9 +60,9 @@ struct Job : public PropertyItem
         properties["datetime"] = Property{v};
     }
 
-    std::string get_selector()
+    std::string get_selector() const
     {
-        return properties["selector"].value;
+        return properties.at("selector").value;
     }
 
     void set_selector(std::string v)
@@ -70,9 +70,9 @@ struct Job : public PropertyItem
         properties["selector"] = Property{v};
     }
 
-    std::string get_template()
+    std::string get_template() const
     {
-        return properties["template"].value;
+        return properties.at("template").value;
     }
 
     void set_template(std::string v)

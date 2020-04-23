@@ -38,7 +38,7 @@ Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
     string lastname = receipent_name.find(" ") == string::npos ? receipent_name : receipent_name.substr(0, receipent_name.find(" "));
     string firstname = receipent_name.find(" ") == string::npos ? "" : receipent_name.substr(receipent_name.find(" "));
 
-    for (Receipent r : all_receipents)
+    for (const Receipent &r : all_receipents)
     {
         if (firstname == "")
         {
@@ -74,13 +74,13 @@ bool selector_includes_receipent(string selector, Receipent r)
 {
     vector<string> tokens = split(selector, '&');
 
-    for (string token : tokens)
+    for (const string &token : tokens)
     {
         vector<string> inner_tokens = split(token, '=');
         string name = string_to_lower_case(inner_tokens.at(0));
         string value = inner_tokens.at(1);
 
-        for (auto entry : r.properties)
+        for (const auto &entry : r.properties)
         {
             string entry_name = string_to_lower_case(entry.first);
             string entry_value = entry.second.value;
@@ -117,15 +117,15 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
         }
 
         json data;
-        for (auto &receipent_prop : r.properties)
+        for (const auto &receipent_prop : r.properties)
         {
             data[receipent_prop.first] = receipent_prop.second.value;
         }
-        for (auto &job_prop : job.properties)
+        for (const auto &job_prop : job.properties)
         {
             data[string_to_lower_case(job_prop.first)] = job_prop.second.value;
         }
-        for (auto &jobfile_prop : jobfile_el)
+        for (const auto &jobfile_prop : jobfile_el)
         {
             data[static_cast<string>(jobfile_prop.first)] = static_cast<string>(jobfile_prop.second);
         }

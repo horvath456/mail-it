@@ -28,20 +28,6 @@ nana::listbox::oresolver &operator<<(nana::listbox::oresolver &orr, Job &job)
     return orr;
 }
 
-std::ostream &operator<<(std::ostream &orr, Job &job)
-{
-    orr << job.get_jobname();
-    return orr;
-}
-
-nana::listbox::iresolver &operator>>(nana::listbox::iresolver &orr, Job &job)
-{
-    std::string jobname;
-    orr >> jobname;
-    job.set_jobname(jobname);
-    return orr;
-}
-
 MainForm::MainForm()
 {
     caption("mit - Mail It");
@@ -50,15 +36,15 @@ MainForm::MainForm()
     make_menus();
 
     all_jobs_listbox.create(*this);
-    all_jobs_listbox.append_header("Jobname");
+    all_jobs_listbox.append_header("Jobname", 200);
     all_jobs_listbox.enable_single(true, false);
-    all_jobs_listbox.events().selected([&]() {
+    all_jobs_listbox.events().selected([&, this]() {
         if (all_jobs_listbox.selected().size() > 0)
         {
             int item = all_jobs_listbox.selected().at(0).item;
             Job job;
             string jobname = all_jobs_listbox.at(0).at(item).text(0);
-            for (Job j : all_jobs)
+            for (const Job& j : all_jobs)
             {
                 if (j.get_jobname() == jobname)
                 {
@@ -67,27 +53,18 @@ MainForm::MainForm()
             }
             selected_job = job;
             is_job_selected = true;
-            tb_jobname.reset(job.get_jobname());
-            tb_subject.reset(job.get_subject());
-            tb_template.reset(job.get_template());
-            tb_selector.reset(job.get_selector());
-            btn_send.enabled(selected_job.get_datetime() == "");
-            btn_simulate_send.enabled(true);
-            btn_delete_job.enabled(true);
+            update_selected_job();
         }
         else
         {
-            selected_job = {};
-            is_job_selected = false;
-            tb_jobname.reset("");
-            tb_subject.reset("");
-            tb_template.reset("");
-            tb_selector.reset("");
-            btn_send.enabled(false);
-            btn_simulate_send.enabled(false);
-            btn_delete_job.enabled(false);
+            remove_selection();
         }
     });
+
+    job_properties_listbox.create(*this);
+    job_properties_listbox.append_header("Eigenschaftsname", 150);
+    job_properties_listbox.append_header("Eigenschaftswert", 150);
+    job_properties_listbox.enable_single(true, false);
 
     tb_jobname.create(*this);
     tb_jobname.editable(false);
@@ -139,6 +116,7 @@ MainForm::MainForm()
     place.field("textboxs") << tb_datetime;
     place.field("textboxs") << tb_template;
     place.field("textboxs") << tb_selector;
+    place.field("textboxs") << job_properties_listbox;
     place.field("buttons") << btn_simulate_send;
     place.field("buttons") << btn_send;
     place.field("buttons") << btn_delete_job;
@@ -241,11 +219,34 @@ void MainForm::remove_selection()
 {
     is_job_selected = false;
     selected_job = {};
-    tb_jobname.reset("");
-    tb_subject.reset("");
-    tb_template.reset("");
-    tb_selector.reset("");
-    btn_send.enabled(false);
-    btn_simulate_send.enabled(false);
-    btn_delete_job.enabled(false);
+    update_selected_job();
+}
+
+void MainForm::update_selected_job()
+{
+    if (is_job_selected)
+    {
+        tb_jobname.reset(selected_job.get_jobname());
+        tb_subject.reset(selected_job.get_subject());
+        tb_template.reset(selected_job.get_template());
+        tb_selector.reset(selected_job.get_selector());
+        btn_send.enabled(selected_job.get_datetime() == "");
+        btn_simulate_send.enabled(true);
+        btn_delete_job.enabled(true);
+        for (auto &el : selected_job.get_other_properties())
+        {
+            job_properties_listbox.at(0).append({el.first, el.second});
+        }
+    }
+    else
+    {
+        tb_jobname.reset("");
+        tb_subject.reset("");
+        tb_template.reset("");
+        tb_selector.reset("");
+        job_properties_listbox.clear();
+        btn_send.enabled(false);
+        btn_simulate_send.enabled(false);
+        btn_delete_job.enabled(false);
+    }
 }
