@@ -103,10 +103,7 @@ int main()
         }
 
         NewJobForm new_job_form{cfg.tmplate};
-        new_job_form.show();
-        nana::exec();
-
-        cout << "Form beendet: " << endl;
+        nana::API::modal_window(new_job_form.handle());
 
         if (!new_job_form.saved())
         {
@@ -115,11 +112,10 @@ int main()
 
         Job job{new_job_form.get_value()};
 
-        cout << "Job erstellt: " << job.get_jobname() << endl;
-
         try
         {
             db.add_job(job);
+            main_form.update_listbox(db.get_all_jobs());
         }
         catch (invalid_argument &e)
         {
@@ -177,8 +173,7 @@ int main()
         }
 
         TemplateConfigForm cfg_form{cfg.tmplate};
-        cfg_form.show();
-        nana::exec();
+        nana::API::modal_window(cfg_form.handle());
 
         if (!cfg_form.saved())
         {
