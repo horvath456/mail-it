@@ -22,6 +22,7 @@
 #include "main_form.h"
 #include "email_config_inputbox.h"
 #include "template_config_form.h"
+#include "new_job_form.h"
 
 using namespace std;
 using namespace Util;
@@ -95,23 +96,22 @@ int main()
     };
 
     auto new_job = [&]() {
+        Config cfg;
+        if (db.get_config())
+        {
+            cfg = db.get_config().value();
+        }
 
+        NewJobForm new_job_form{cfg.tmplate};
+        new_job_form.show();
+        nana::exec();
     };
 
     auto email_cfg = [&]() {
         Config cfg;
-
-        try
+        if (db.get_config())
         {
-            if (db.get_config())
-            {
-                cfg = db.get_config().value();
-            }
-        }
-        catch (...)
-        {
-            show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
-            return;
+            cfg = db.get_config().value();
         }
 
         EmailConfigInputbox email_cfg{main_form, cfg.host, cfg.port, cfg.username, cfg.passwd};
@@ -140,18 +140,9 @@ int main()
 
     auto template_cfg = [&]() {
         Config cfg;
-
-        try
+        if (db.get_config())
         {
-            if (db.get_config())
-            {
-                cfg = db.get_config().value();
-            }
-        }
-        catch (...)
-        {
-            show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
-            return;
+            cfg = db.get_config().value();
         }
 
         TemplateConfigForm cfg_form{cfg.tmplate};
