@@ -46,7 +46,7 @@ int main()
     };
 
     auto import_receipents = [&]() {
-        optional<string> filename = show_csv_file_selector_box();
+        optional<string> filename = show_csv_file_selector_box("Receipents-CSV-Datei auswählen");
         if (!filename)
         {
             return;
@@ -116,7 +116,7 @@ int main()
     };
 
     auto send_job = [&](Job job) {
-        optional<string> filename = show_csv_file_selector_box();
+        optional<string> filename = show_csv_file_selector_box("Jobfile auswählen");
         if (!filename)
         {
             return;
@@ -160,7 +160,7 @@ int main()
     };
 
     auto simulate_send_job = [&](Job job) {
-        optional<string> filename = show_csv_file_selector_box();
+        optional<string> filename = show_csv_file_selector_box("Jobfile auswählen");
         if (!filename)
         {
             return;

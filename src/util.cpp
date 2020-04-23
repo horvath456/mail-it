@@ -59,27 +59,28 @@ std::string Util::get_date_string()
     return std::string{date_string};
 }
 
-void Util::show_error_message_box(std::string headline, std::string text)
+void Util::show_error_message_box(std::string title, std::string text)
 {
-    nana::msgbox mb{0, headline, nana::msgbox::ok};
+    nana::msgbox mb{0, title, nana::msgbox::ok};
     mb.icon(mb.icon_error);
     mb << text;
     mb.show();
 }
 
-bool Util::show_confirmation_message_box(std::string headline, std::string text)
+bool Util::show_confirmation_message_box(std::string title, std::string text)
 {
-    nana::msgbox mb{0, headline, nana::msgbox::yes_no};
+    nana::msgbox mb{0, title, nana::msgbox::yes_no};
     mb.icon(mb.icon_question);
     mb << text;
     return mb.show() == nana::msgbox::pick_yes;
 }
 
-std::optional<std::string> Util::show_csv_file_selector_box()
+std::optional<std::string> Util::show_csv_file_selector_box(std::string title)
 {
     nana::filebox fb(0, true);
     fb.add_filter(("CSV File"), ("*.csv"));
     fb.add_filter(("All Files"), ("*.*"));
+    fb.title(title);
 
     auto files = fb();
     if (!files.empty())
