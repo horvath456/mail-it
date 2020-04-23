@@ -142,8 +142,9 @@ vector<Job> DatabaseHandler::get_all_jobs()
 
 void DatabaseHandler::add_job(Job j)
 {
-    if(get_job(j.get_jobname())) {
-       throw invalid_argument("Job with that name already exists");
+    if (get_job(j.get_jobname()))
+    {
+        throw invalid_argument("Job with that name already exists");
     }
 
     db.exec("INSERT INTO job VALUES (\"" + j.get_jobname() + "\", \"" +
@@ -155,6 +156,16 @@ void DatabaseHandler::add_job(Job j)
         db.exec("INSERT INTO job_property VALUES (\"" + j.get_jobname() + "\", \"" +
                 el.first + "\", \"" + el.second + "\")");
     }
+}
+
+void DatabaseHandler::update_job_datetime(Job j)
+{
+    if (!get_job(j.get_jobname()))
+    {
+        throw invalid_argument("Job with that name does not exist");
+    }
+
+    db.exec("UPDATE job SET datetime=\"" + j.get_datetime() + "\" WHERE jobname=\"" + j.get_jobname() + "\"");
 }
 
 optional<Job> DatabaseHandler::get_job(string jobname)

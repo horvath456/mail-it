@@ -18,6 +18,7 @@ public:
     std::vector<Receipent> get_all_receipents();
     std::vector<Job> get_all_jobs();
     void add_job(Job j);
+    void update_job_datetime(Job j);
     std::optional<Job> get_job(std::string jobname);
     void delete_job(Job j);
     std::optional<Config> get_config();
