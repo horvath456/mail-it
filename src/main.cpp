@@ -3,6 +3,7 @@
 #include <string>
 #include <functional>
 #include <utility>
+#include <fstream>
 
 #include <nana/gui.hpp>
 #include <nana/gui/filebox.hpp>
@@ -116,7 +117,7 @@ int main()
         }
     };
 
-    auto send_job = [&](Job job) {
+    auto send_job = [&](Job job, bool simulate) {
         nana::filebox fb(0, true);
         fb.add_filter(("CSV File"), ("*.csv"));
         fb.add_filter(("All Files"), ("*.*"));
@@ -125,27 +126,46 @@ int main()
         if (!files.empty())
         {
             string jobfile = files.front().string();
+            ofstream myfile;
+            if (simulate)
+            {
+                myfile.open(job.get_jobname() + "simulated_sent.log");
+            }
+            else
+            {
+                myfile.open(job.get_jobname() + "_sent.log");
+            }
+            string email_sender = db.get_config().value_or(Config{}).username;
             JobSender::send_job(job, jobfile, db.get_all_receipents(),
                                 [&](string email_receiver, string subject, string email_contents) {
-                                    cout << email_receiver << subject << email_contents << endl;
+                                    myfile << "From: <" << email_sender << ">\n";
+                                    myfile << "To: <" << email_receiver << ">\n";
+                                    myfile << "Subject: " << subject << "\n\n";
+                                    myfile << email_contents;
+                                    myfile << "\n\n\n";
+
+                                    if (!simulate)
+                                    {
+                                        bool success = mailer.send_email(email_sender, email_receiver, subject, email_contents);
+                                        if (!success)
+                                        {
+                                            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
+                                            mb.icon(mb.icon_error);
+                                            mb << "Beim Senden ist ein Fehler aufgetreten.";
+                                            mb.show();
+                                        }
+                                    }
                                 });
+            myfile.close();
         }
     };
 
-    auto simulate_send_job = [&](Job job) {
-        nana::filebox fb(0, true);
-        fb.add_filter(("CSV File"), ("*.csv"));
-        fb.add_filter(("All Files"), ("*.*"));
+    auto real_send_job = [&](Job job) {
+        send_job(job, false);
+    };
 
-        auto files = fb();
-        if (!files.empty())
-        {
-            string jobfile = files.front().string();
-            JobSender::send_job(job, jobfile, db.get_all_receipents(),
-                                [&](string email_receiver, string subject, string email_contents) {
-                                    cout << email_receiver << subject << email_contents << endl;
-                                });
-        }
+    auto simulate_send_job = [&](Job job) {
+        send_job(job, true);
     };
 
     auto delete_job = [&](Job job) {
@@ -158,7 +178,7 @@ int main()
     main_form.set_new_job_function(new_job);
     main_form.set_email_cfg_function(email_cfg);
     main_form.set_template_cfg_function(template_cfg);
-    main_form.set_send_job_function(send_job);
+    main_form.set_send_job_function(real_send_job);
     main_form.set_simulate_send_job_function(simulate_send_job);
     main_form.set_delete_job_function(delete_job);
 
