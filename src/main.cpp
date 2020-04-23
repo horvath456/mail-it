@@ -149,8 +149,16 @@ int main()
     }
     main_form.list.auto_draw(true);
 
+    main_form.list.events().selected([&]() {
+        if (main_form.list.selected().size() > 0)
+        {
+            int item = main_form.list.selected().at(0).item;
+            cout << item << endl;
+        }
+    });
+
     main_form.show();
-    nana::API::window_size(main_form, {600, 400});
+    nana::API::window_size(main_form, {700, 400});
 
     nana::exec();
 
