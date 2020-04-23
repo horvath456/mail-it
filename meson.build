@@ -34,7 +34,8 @@ src = ['src/main.cpp',
        'src/main_form.cpp',
        'src/send_job.cpp',
        'src/email_config_inputbox.cpp',
-       'src/template_config_form.cpp']
+       'src/template_config_form.cpp',
+       'src/util.cpp']
 
 executable('mail-it', 
            sources : src,

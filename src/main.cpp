@@ -4,6 +4,7 @@
 #include <functional>
 #include <utility>
 #include <fstream>
+#include <optional>
 
 #include <nana/gui.hpp>
 #include <nana/gui/filebox.hpp>
@@ -16,12 +17,14 @@
 #include "mail_handler.h"
 #include "csv_utils.h"
 #include "send_job.h"
+#include "util.h"
 
 #include "main_form.h"
 #include "email_config_inputbox.h"
 #include "template_config_form.h"
 
 using namespace std;
+using namespace Util;
 
 int main()
 {
@@ -36,44 +39,39 @@ int main()
     }
 
     auto delete_all_receipents = [&]() {
-        nana::msgbox mb{main_form.handle(), "Bestätigung", nana::msgbox::yes_no};
-        mb.icon(mb.icon_question);
-        mb << "Wollen Sie wirklich alle Receipents löschen?";
-        if (mb.show() == nana::msgbox::pick_yes)
+        if (show_confirmation_message_box("Bestätigung", "Wollen Sie wirklich alle Receipents löschen?"))
         {
             db.delete_all_receipents();
         }
     };
 
     auto import_receipents = [&]() {
-        nana::filebox fb(0, true);
-        fb.add_filter(("CSV File"), ("*.csv"));
-        fb.add_filter(("All Files"), ("*.*"));
-
-        auto files = fb();
-        if (!files.empty())
+        optional<string> filename = show_csv_file_selector_box();
+        if (!filename)
         {
-            db.delete_all_receipents();
-            string file = files.front().string();
-            try
+            return;
+        }
+
+        db.delete_all_receipents();
+
+        try
+        {
+            vector<Receipent> receipents = CSV::read_receipent_list(filename.value());
+            for (Receipent &r : receipents)
             {
-                vector<Receipent> receipents = CSV::read_receipent_list(file);
-                for (Receipent &r : receipents)
-                {
-                    db.add_receipent(r);
-                }
-                nana::msgbox mb{main_form.handle(), "Importieren erfolgreich", nana::msgbox::ok};
-                mb.icon(mb.icon_information);
-                mb << "Es wurden " << receipents.size() << " Receipents importiert.";
-                mb.show();
+                db.add_receipent(r);
             }
-            catch (...)
-            {
-                nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
-                mb.icon(mb.icon_error);
-                mb << "Beim Importieren der Receipents ist ein Fehler aufgetreten.";
-                mb.show();
-            }
+            nana::msgbox mb{main_form.handle(), "Importieren erfolgreich", nana::msgbox::ok};
+            mb.icon(mb.icon_information);
+            mb << "Es wurden " << receipents.size() << " Receipents importiert.";
+            mb.show();
+        }
+        catch (...)
+        {
+            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
+            mb.icon(mb.icon_error);
+            mb << "Beim Importieren der Receipents ist ein Fehler aufgetreten.";
+            mb.show();
         }
     };
 
@@ -117,55 +115,73 @@ int main()
         }
     };
 
-    auto send_job = [&](Job job, bool simulate) {
-        nana::filebox fb(0, true);
-        fb.add_filter(("CSV File"), ("*.csv"));
-        fb.add_filter(("All Files"), ("*.*"));
-
-        auto files = fb();
-        if (!files.empty())
+    auto send_job = [&](Job job) {
+        optional<string> filename = show_csv_file_selector_box();
+        if (!filename)
         {
-            string jobfile = files.front().string();
-            ofstream myfile;
-            if (simulate)
-            {
-                myfile.open(job.get_jobname() + "simulated_sent.log");
-            }
-            else
-            {
-                myfile.open(job.get_jobname() + "_sent.log");
-            }
-            string email_sender = db.get_config().value_or(Config{}).username;
-            JobSender::send_job(job, jobfile, db.get_all_receipents(),
-                                [&](string email_receiver, string subject, string email_contents) {
-                                    myfile << "From: <" << email_sender << ">\n";
-                                    myfile << "To: <" << email_receiver << ">\n";
-                                    myfile << "Subject: " << subject << "\n\n";
-                                    myfile << email_contents;
-                                    myfile << "\n\n\n";
+            return;
+        }
 
-                                    if (!simulate)
-                                    {
-                                        bool success = mailer.send_email(email_sender, email_receiver, subject, email_contents);
-                                        if (!success)
-                                        {
-                                            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
-                                            mb.icon(mb.icon_error);
-                                            mb << "Beim Senden ist ein Fehler aufgetreten.";
-                                            mb.show();
-                                        }
-                                    }
-                                });
+        stringstream ss;
+        bool success = true;
+
+        string email_sender = db.get_config().value_or(Config{}).username;
+
+        JobSender::send_job(job, filename.value(), db.get_all_receipents(),
+                            [&](string email_receiver, string subject, string email_contents) {
+                                ss << "From: <" << email_sender << ">\n";
+                                ss << "To: <" << email_receiver << ">\n";
+                                ss << "Subject: " << subject << "\n\n";
+                                ss << email_contents;
+                                ss << "\n\n\n";
+
+                                bool email_send_success = mailer.send_email(email_sender, email_receiver, subject, email_contents);
+                                if (!email_send_success)
+                                {
+                                    success = false;
+                                }
+                            });
+
+        if (!success)
+        {
+            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
+            mb.icon(mb.icon_error);
+            mb << "Beim Senden ist ein Fehler aufgetreten.";
+            mb.show();
+        }
+        else
+        {
+            ofstream myfile;
+            myfile.open(job.get_jobname() + "_sent.log");
+            myfile << ss.str();
             myfile.close();
+
+            job.set_datetime(get_ISO_8601_datetime());
+            db.update_job_datetime(job);
         }
     };
 
-    auto real_send_job = [&](Job job) {
-        send_job(job, false);
-    };
-
     auto simulate_send_job = [&](Job job) {
-        send_job(job, true);
+        optional<string> filename = show_csv_file_selector_box();
+        if (!filename)
+        {
+            return;
+        }
+
+        ofstream myfile;
+        myfile.open(job.get_jobname() + "_simulated_sent.log");
+
+        string email_sender = db.get_config().value_or(Config{}).username;
+
+        JobSender::send_job(job, filename.value(), db.get_all_receipents(),
+                            [&](string email_receiver, string subject, string email_contents) {
+                                myfile << "From: <" << email_sender << ">\n";
+                                myfile << "To: <" << email_receiver << ">\n";
+                                myfile << "Subject: " << subject << "\n\n";
+                                myfile << email_contents;
+                                myfile << "\n\n\n";
+                            });
+        myfile.close();
     };
 
     auto delete_job = [&](Job job) {
@@ -178,7 +194,7 @@ int main()
     main_form.set_new_job_function(new_job);
     main_form.set_email_cfg_function(email_cfg);
     main_form.set_template_cfg_function(template_cfg);
-    main_form.set_send_job_function(real_send_job);
+    main_form.set_send_job_function(send_job);
     main_form.set_simulate_send_job_function(simulate_send_job);
     main_form.set_delete_job_function(delete_job);
 

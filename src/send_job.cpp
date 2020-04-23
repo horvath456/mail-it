@@ -29,6 +29,8 @@ using namespace std;
 using namespace inja;
 using json = nlohmann::json;
 
+using namespace Util;
+
 Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
 {
     Receipent return_receipent{};
