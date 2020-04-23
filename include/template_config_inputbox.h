@@ -3,10 +3,10 @@
 #include <nana/gui.hpp>
 #include <string>
 
-class ConfigInputbox
+class TemplateConfigInputbox
 {
 public:
-    ConfigInputbox(nana::form frm);
+    TemplateConfigInputbox(nana::form frm);
     bool show();
     std::string get_host();
     int get_port();

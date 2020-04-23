@@ -1,4 +1,4 @@
-#include "config_inputbox.h"
+#include "email_config_inputbox.h"
 
 #include <nana/gui.hpp>
 #include <string>
@@ -6,7 +6,7 @@
 using namespace nana;
 using namespace std;
 
-ConfigInputbox::ConfigInputbox(form frm) : inbox{frm, "Bitte die Email-Zugangsdaten eingeben.", "Email-Zugangsdaten"},
+EmailConfigInputbox::EmailConfigInputbox(form frm) : inbox{frm, "Bitte die Email-Zugangsdaten eingeben.", "Email-Zugangsdaten"},
                                            host{"Host"},
                                            port{"Port", 0, 0, 65535, 1},
                                            username{"Username"},
@@ -47,27 +47,27 @@ ConfigInputbox::ConfigInputbox(form frm) : inbox{frm, "Bitte die Email-Zugangsda
     });
 }
 
-bool ConfigInputbox::show()
+bool EmailConfigInputbox::show()
 {
     return inbox.show(host, port, username, password);
 }
 
-string ConfigInputbox::get_host()
+string EmailConfigInputbox::get_host()
 {
     return host.value();
 }
 
-int ConfigInputbox::get_port()
+int EmailConfigInputbox::get_port()
 {
     return port.value();
 }
 
-string ConfigInputbox::get_username()
+string EmailConfigInputbox::get_username()
 {
     return username.value();
 }
 
-string ConfigInputbox::get_password()
+string EmailConfigInputbox::get_password()
 {
     return password.value();
 }

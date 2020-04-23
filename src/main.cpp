@@ -18,7 +18,8 @@
 #include "csv_utils.h"
 
 #include "main_form.h"
-#include "config_inputbox.h"
+#include "email_config_inputbox.h"
+#include "template_config_inputbox.h"
 
 using namespace std;
 
@@ -81,16 +82,17 @@ int main()
     };
 
     auto new_job = [&]() {
-        ConfigInputbox cfg_form{main_form};
-        cfg_form.show();
+
     };
 
     auto email_cfg = [&]() {
-
+        EmailConfigInputbox cfg_form{main_form};
+        cfg_form.show();
     };
 
     auto template_cfg = [&]() {
-
+        TemplateConfigInputbox cfg_form{main_form};
+        cfg_form.show();
     };
 
     main_form.set_delete_all_receipents_function(delete_all_receipents);

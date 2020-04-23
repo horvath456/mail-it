@@ -27,10 +27,29 @@ inc_dirs = include_directories(['include',
                                 get_option('inja_include_dir')])
 
 
-src = ['src/main.cpp', 'src/database_handler.cpp', 'src/mail_handler.cpp', 'src/csv_utils.cpp', 'src/main_form.cpp', 'src/send_job.cpp', 'src/config_inputbox.cpp']
+src = ['src/main.cpp',
+       'src/database_handler.cpp',
+       'src/mail_handler.cpp',
+       'src/csv_utils.cpp',
+       'src/main_form.cpp',
+       'src/send_job.cpp',
+       'src/email_config_inputbox.cpp',
+       'src/template_config_inputbox.cpp']
 
 executable('mail-it', 
            sources : src,
            include_directories : [inc_dirs],
-           dependencies: [nana, SQLiteCpp, mailclient, libcurl_dep, sqlite3_dep, thread_dep, fontconfig_dep, x11_dep, xext_dep, xft_dep, xrandr_dep, gl_dep, glu_dep]
+           dependencies: [nana,
+                          SQLiteCpp,
+                          mailclient,
+                          libcurl_dep,
+                          sqlite3_dep,
+                          thread_dep,
+                          fontconfig_dep,
+                          x11_dep,
+                          xext_dep,
+                          xft_dep,
+                          xrandr_dep,
+                          gl_dep,
+                          glu_dep]
            )
