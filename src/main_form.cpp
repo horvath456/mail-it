@@ -192,4 +192,9 @@ void MainForm::update_listbox(std::vector<Job> jobs)
     }
     list.auto_draw(true);
     all_jobs = jobs;
+
+    tb1.reset(selected_job.get_jobname());
+    tb2.reset(selected_job.get_subject());
+    tb3.reset(selected_job.get_template());
+    tb4.reset(selected_job.get_selector());
 }

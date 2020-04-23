@@ -144,10 +144,7 @@ int main()
 
         if (!success)
         {
-            nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
-            mb.icon(mb.icon_error);
-            mb << "Beim Senden ist ein Fehler aufgetreten.";
-            mb.show();
+            show_error_message_box("Fehler", "Beim Senden ist ein Fehler aufgetreten.");
         }
         else
         {
@@ -158,6 +155,7 @@ int main()
 
             job.set_datetime(get_ISO_8601_datetime());
             db.update_job_datetime(job);
+            main_form.update_listbox(db.get_all_jobs());
         }
     };
 
