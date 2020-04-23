@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <functional>
 #include <utility>
+#include <ctime>
+#include <iostream>
 
 #include <nlohmann/json.hpp>
 #include <inja.hpp>
@@ -26,10 +28,12 @@ using namespace std;
 using namespace inja;
 using json = nlohmann::json;
 
-string string_to_lower_case(string s) {
+string string_to_lower_case(string s)
+{
     string res{};
 
-    for(char c : s) {
+    for (char c : s)
+    {
         res += tolower(c);
     }
 
@@ -56,6 +60,20 @@ bool string_ends_with(const string &str, const string &suffix)
 bool string_starts_with(const string &str, const string &prefix)
 {
     return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
+
+string get_date_string()
+{
+    time_t curr_time;
+    tm *curr_tm;
+    char date_string[100];
+
+    time(&curr_time);
+    curr_tm = localtime(&curr_time);
+
+    strftime(date_string, 50, "%B %d, %Y", curr_tm);
+    
+    return string{date_string};
 }
 
 Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
@@ -107,10 +125,12 @@ bool selector_includes_receipent(string selector, Receipent r)
         string name = string_to_lower_case(inner_tokens.at(0));
         string value = inner_tokens.at(1);
 
-        for(auto entry : r.properties) {
+        for (auto entry : r.properties)
+        {
             string entry_name = string_to_lower_case(entry.first);
             string entry_value = entry.second.value;
-            if(entry_name == name && entry_value != value) {
+            if (entry_name == name && entry_value != value)
+            {
                 return false;
             }
         }
@@ -154,6 +174,7 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
         {
             data[static_cast<string>(jobfile_prop.first)] = static_cast<string>(jobfile_prop.second);
         }
+        data["date"] = get_date_string();
 
         string email_contents{render(job.get_template(), data)};
         string email_receiver = r.get_email();
