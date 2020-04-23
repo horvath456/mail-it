@@ -104,9 +104,21 @@ int main()
     };
 
     auto template_cfg = [&]() {
-        TemplateConfigForm cfg_form{};
+        Config cfg;
+        if (db.get_config())
+        {
+            cfg = db.get_config().value();
+        }
+
+        TemplateConfigForm cfg_form{cfg.tmplate};
         cfg_form.show();
         nana::exec();
+
+        if (cfg_form.saved())
+        {
+            cfg.tmplate = cfg_form.get_value();
+            db.set_config(cfg);
+        }
     };
 
     main_form.set_delete_all_receipents_function(delete_all_receipents);

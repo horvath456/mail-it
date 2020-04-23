@@ -10,9 +10,12 @@
 class TemplateConfigForm : public nana::form
 {
 public:
-    TemplateConfigForm();
+    TemplateConfigForm(std::string tmplate);
+    bool saved();
+    std::string get_value();
 
-public:
+private:
+    bool save_clicked = false;
     nana::place place;
     nana::textbox tb1;
     nana::button btn1;
