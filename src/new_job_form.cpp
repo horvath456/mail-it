@@ -32,6 +32,10 @@ NewJobForm::NewJobForm(string tmplate)
 
     btn_create.create(*this);
     btn_create.caption("Anlegen");
+    btn_create.events().click([this]() {
+        save_clicked = true;
+        close();
+    });
 
     place.bind(*this);
     place.div("<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>");
@@ -41,4 +45,19 @@ NewJobForm::NewJobForm(string tmplate)
     place.field("textboxs") << tb_selector;
     place.field("buttons") << btn_create;
     place.collocate();
+}
+
+bool NewJobForm::saved()
+{
+    return save_clicked;
+}
+
+Job NewJobForm::get_value()
+{
+    Job job{};
+    job.set_jobname(tb_jobname.text());
+    job.set_selector(tb_selector.text());
+    job.set_template(tb_template.text());
+    job.set_subject(tb_subject.text());
+    return job;
 }

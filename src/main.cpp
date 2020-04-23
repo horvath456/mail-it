@@ -105,6 +105,37 @@ int main()
         NewJobForm new_job_form{cfg.tmplate};
         new_job_form.show();
         nana::exec();
+
+        cout << "Form beendet: " << endl;
+
+        if (!new_job_form.saved())
+        {
+            return;
+        }
+
+        Job job{new_job_form.get_value()};
+
+        cout << "Job erstellt: " << job.get_jobname() << endl;
+
+        try
+        {
+            db.add_job(job);
+        }
+        catch (invalid_argument &e)
+        {
+            if (string{e.what()} == "Job with that name already exists")
+            {
+                show_error_message_box("Fehler", "Ein Job mit diesem Namen existiert bereits.");
+            }
+            else
+            {
+                show_error_message_box("Fehler", "Beim Erstellen des Jobs ist ein Fehler aufgetreten.");
+            }
+        }
+        catch (...)
+        {
+            show_error_message_box("Fehler", "Beim Erstellen des Jobs ist ein Fehler aufgetreten.");
+        }
     };
 
     auto email_cfg = [&]() {
