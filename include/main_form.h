@@ -50,9 +50,10 @@ private:
 
     nana::place place;
     nana::menubar menubar;
-    nana::listbox list;
+    nana::listbox all_jobs_listbox;
     nana::textbox tb_jobname;
     nana::textbox tb_subject;
+    nana::textbox tb_datetime;
     nana::textbox tb_template;
     nana::textbox tb_selector;
     nana::button btn_simulate_send;

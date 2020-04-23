@@ -49,15 +49,15 @@ MainForm::MainForm()
     menubar.create(*this);
     make_menus();
 
-    list.create(*this);
-    list.append_header("Jobname");
-    list.enable_single(true, false);
-    list.events().selected([&]() {
-        if (list.selected().size() > 0)
+    all_jobs_listbox.create(*this);
+    all_jobs_listbox.append_header("Jobname");
+    all_jobs_listbox.enable_single(true, false);
+    all_jobs_listbox.events().selected([&]() {
+        if (all_jobs_listbox.selected().size() > 0)
         {
-            int item = list.selected().at(0).item;
+            int item = all_jobs_listbox.selected().at(0).item;
             Job job;
-            string jobname = list.at(0).at(item).text(0);
+            string jobname = all_jobs_listbox.at(0).at(item).text(0);
             for (Job j : all_jobs)
             {
                 if (j.get_jobname() == jobname)
@@ -90,15 +90,23 @@ MainForm::MainForm()
     });
 
     tb_jobname.create(*this);
+    tb_jobname.editable(false);
     tb_jobname.tip_string("Jobname:").multi_lines(false);
 
     tb_subject.create(*this);
+    tb_subject.editable(false);
     tb_subject.tip_string("Subject:").multi_lines(false);
 
+    tb_datetime.create(*this);
+    tb_datetime.editable(false);
+    tb_datetime.tip_string("Versendedatum:").multi_lines(false);
+
     tb_template.create(*this);
+    tb_template.editable(false);
     tb_template.tip_string("Template:").multi_lines(true);
 
     tb_selector.create(*this);
+    tb_selector.editable(false);
     tb_selector.tip_string("Selector:").multi_lines(true);
 
     btn_simulate_send.create(*this);
@@ -125,9 +133,10 @@ MainForm::MainForm()
     place.bind(*this);
     place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
     place.field("menubar") << menubar;
-    place.field("listbox") << list;
+    place.field("listbox") << all_jobs_listbox;
     place.field("textboxs") << tb_jobname;
     place.field("textboxs") << tb_subject;
+    place.field("textboxs") << tb_datetime;
     place.field("textboxs") << tb_template;
     place.field("textboxs") << tb_selector;
     place.field("buttons") << btn_simulate_send;
@@ -200,13 +209,13 @@ void MainForm::set_delete_job_function(std::function<void(Job job)> f)
 
 void MainForm::update_listbox(std::vector<Job> jobs)
 {
-    list.auto_draw(false);
-    list.clear();
+    all_jobs_listbox.auto_draw(false);
+    all_jobs_listbox.clear();
     for (auto &job : jobs)
     {
-        list.at(0).append(job);
+        all_jobs_listbox.at(0).append(job);
     }
-    list.auto_draw(true);
+    all_jobs_listbox.auto_draw(true);
     all_jobs = jobs;
 
     tb_jobname.reset(selected_job.get_jobname());
