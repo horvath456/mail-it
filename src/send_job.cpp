@@ -22,59 +22,12 @@
 #include "receipent.h"
 #include "csv_utils.h"
 #include "mail_handler.h"
+#include "util.h"
 
 using namespace std;
 
 using namespace inja;
 using json = nlohmann::json;
-
-string string_to_lower_case(string s)
-{
-    string res{};
-
-    for (char c : s)
-    {
-        res += tolower(c);
-    }
-
-    return res;
-}
-
-vector<string> split(const string &s, char delim)
-{
-    stringstream ss(s);
-    string item;
-    vector<string> elems;
-    while (getline(ss, item, delim))
-    {
-        elems.push_back(item);
-    }
-    return elems;
-}
-
-bool string_ends_with(const string &str, const string &suffix)
-{
-    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
-}
-
-bool string_starts_with(const string &str, const string &prefix)
-{
-    return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
-}
-
-string get_date_string()
-{
-    time_t curr_time;
-    tm *curr_tm;
-    char date_string[100];
-
-    time(&curr_time);
-    curr_tm = localtime(&curr_time);
-
-    strftime(date_string, 50, "%B %d, %Y", curr_tm);
-    
-    return string{date_string};
-}
 
 Receipent get_receipent(string receipent_name, vector<Receipent> all_receipents)
 {
