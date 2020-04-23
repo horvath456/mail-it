@@ -14,6 +14,9 @@ public:
 
 private:
     nana::place place;
-    nana::textbox tb1;
-    nana::button btn1;
+    nana::textbox tb_jobname;
+    nana::textbox tb_subject;
+    nana::textbox tb_template;
+    nana::textbox tb_selector;
+    nana::button btn_create;
 };
