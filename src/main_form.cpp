@@ -64,13 +64,7 @@ void MainForm::make_menus()
         new_job();
     });
     menubar.at(1).append("Alle löschen", [this](menu::item_proxy &) {
-        msgbox mb{handle(), "Bestätigung", msgbox::yes_no};
-        mb.icon(mb.icon_question);
-        mb << "Wollen Sie wirklich alle Receipents löschen?";
-        if (mb.show() == msgbox::pick_yes)
-        {
-            delete_all_receipents();
-        }
+        delete_all_receipents();
     });
     menubar.at(1).append("Importieren", [this](menu::item_proxy &) {
         import_receipents();

@@ -53,7 +53,13 @@ int main()
     }
 
     auto delete_all_receipents = [&]() {
-        db.delete_all_receipents();
+        nana::msgbox mb{main_form.handle(), "Bestätigung", nana::msgbox::yes_no};
+        mb.icon(mb.icon_question);
+        mb << "Wollen Sie wirklich alle Receipents löschen?";
+        if (mb.show() == nana::msgbox::pick_yes)
+        {
+            db.delete_all_receipents();
+        }
     };
 
     auto import_receipents = [&]() {
