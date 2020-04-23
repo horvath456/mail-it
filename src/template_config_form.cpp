@@ -17,21 +17,21 @@ TemplateConfigForm::TemplateConfigForm(string tmplate)
 {
     caption("Template-Konfiguration");
 
-    tb1.create(*this);
-    tb1.tip_string("Template:").multi_lines(true);
-    tb1.reset(tmplate);
+    tb_template.create(*this);
+    tb_template.tip_string("Template:").multi_lines(true);
+    tb_template.reset(tmplate);
 
-    btn1.create(*this);
-    btn1.caption("Speichern");
-    btn1.events().click([this]() {
+    btn_save.create(*this);
+    btn_save.caption("Speichern");
+    btn_save.events().click([this]() {
         save_clicked = true;
         close();
     });
 
     place.bind(*this);
     place.div("<vertical <textboxs margin=10 gap=10> <buttons margin=10 gap=10 weight=48> >");
-    place.field("textboxs") << tb1;
-    place.field("buttons") << btn1;
+    place.field("textboxs") << tb_template;
+    place.field("buttons") << btn_save;
     place.collocate();
 }
 
@@ -42,5 +42,5 @@ bool TemplateConfigForm::saved()
 
 string TemplateConfigForm::get_value()
 {
-    return tb1.text();
+    return tb_template.text();
 }

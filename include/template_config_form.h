@@ -17,6 +17,6 @@ public:
 private:
     bool save_clicked = false;
     nana::place place;
-    nana::textbox tb1;
-    nana::button btn1;
+    nana::textbox tb_template;
+    nana::button btn_save;
 };
