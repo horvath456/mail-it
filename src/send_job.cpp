@@ -168,7 +168,7 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
         }
         for (auto &job_prop : job.properties)
         {
-            data[job_prop.first] = job_prop.second.value;
+            data[string_to_lower_case(job_prop.first)] = job_prop.second.value;
         }
         for (auto &jobfile_prop : jobfile_el)
         {
