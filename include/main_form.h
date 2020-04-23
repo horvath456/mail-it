@@ -40,4 +40,5 @@ public:
     nana::textbox tb4;
     nana::button btn1;
     nana::button btn2;
+    nana::button btn3;
 };

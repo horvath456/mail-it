@@ -23,6 +23,7 @@ MainForm::MainForm()
 
     list.create(*this);
     list.append_header("Jobname");
+    list.enable_single(true, false);
 
     tb1.create(*this);
     tb1.tip_string("Jobname:").multi_lines(false);
@@ -42,6 +43,9 @@ MainForm::MainForm()
     btn2.create(*this);
     btn2.caption("Job senden");
 
+    btn3.create(*this);
+    btn3.caption("Job löschen");
+
     place.bind(*this);
     place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
     place.field("menubar") << menubar;
@@ -52,6 +56,7 @@ MainForm::MainForm()
     place.field("textboxs") << tb4;
     place.field("buttons") << btn1;
     place.field("buttons") << btn2;
+    place.field("buttons") << btn3;
     place.collocate();
 }
 
