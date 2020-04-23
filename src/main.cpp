@@ -142,10 +142,12 @@ int main()
     main_form.set_template_cfg_function(template_cfg);
 
     vector<Job> all_jobs = db.get_all_jobs();
+    main_form.list.auto_draw(false);
     for (auto &job : all_jobs)
     {
         main_form.list.at(0).append(job);
     }
+    main_form.list.auto_draw(true);
 
     main_form.show();
     nana::API::window_size(main_form, {600, 400});
