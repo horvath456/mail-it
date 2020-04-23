@@ -5,6 +5,7 @@
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/place.hpp>
 
@@ -20,6 +21,7 @@ public:
 private:
     bool save_clicked = false;
     nana::place place;
+    nana::listbox job_properties_listbox;
     nana::textbox tb_jobname;
     nana::textbox tb_subject;
     nana::textbox tb_template;

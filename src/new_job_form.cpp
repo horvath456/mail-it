@@ -17,6 +17,13 @@ NewJobForm::NewJobForm(string tmplate)
 {
     caption("Neuen Job anlegen");
 
+    nana::API::window_size(handle(), {450, 350});
+
+    job_properties_listbox.create(*this);
+    job_properties_listbox.append_header("Eigenschaftsname", 150);
+    job_properties_listbox.append_header("Eigenschaftswert", 150);
+    job_properties_listbox.enable_single(true, false);
+
     tb_jobname.create(*this);
     tb_jobname.tip_string("Jobname:").multi_lines(false);
 
@@ -43,6 +50,7 @@ NewJobForm::NewJobForm(string tmplate)
     place.field("textboxs") << tb_subject;
     place.field("textboxs") << tb_template;
     place.field("textboxs") << tb_selector;
+    place.field("textboxs") << job_properties_listbox;
     place.field("buttons") << btn_create;
     place.collocate();
 }
