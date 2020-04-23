@@ -108,6 +108,8 @@ int main()
     }
 
     main_form.show();
+    nana::API::window_size(main_form, {600, 400});
+
     nana::exec();
 
     return 0;
