@@ -112,14 +112,14 @@ MainForm::MainForm()
     btn_simulate_send.create(*this);
     btn_simulate_send.caption("Senden simulieren");
     btn_simulate_send.events().click([this]() {
-        send_job(selected_job);
+        simulate_send_job(selected_job);
     });
     btn_simulate_send.enabled(false);
 
     btn_send.create(*this);
     btn_send.caption("Job senden");
     btn_send.events().click([this]() {
-        simulate_send_job(selected_job);
+        send_job(selected_job);
     });
     btn_send.enabled(false);
 
@@ -131,7 +131,7 @@ MainForm::MainForm()
     btn_delete_job.enabled(false);
 
     place.bind(*this);
-    place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
+    place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25,25]><weight=45 gap=10 margin=10 buttons>>>");
     place.field("menubar") << menubar;
     place.field("listbox") << all_jobs_listbox;
     place.field("textboxs") << tb_jobname;
