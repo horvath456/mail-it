@@ -54,6 +54,7 @@ int main()
         try
         {
             db.delete_all_receipents();
+            show_info_message_box("Löschen erfolgreich", "Es wurden alle Receipents gelöscht.");
         }
         catch (...)
         {
