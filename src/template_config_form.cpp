@@ -24,7 +24,7 @@ TemplateConfigForm::TemplateConfigForm()
     btn1.caption("Speichern");
 
     place.bind(*this);
-    place.div("vert<<textboxs margin=10 gap=10 weight=28><buttons margin=10>>");
+    place.div("<vertical <textboxs margin=10 gap=10> <buttons margin=10 gap=10 weight=48> >");
     place.field("textboxs") << tb1;
     place.field("buttons") << btn1;
     place.collocate();
