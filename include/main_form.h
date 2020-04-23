@@ -49,11 +49,11 @@ private:
     nana::place place;
     nana::menubar menubar;
     nana::listbox list;
-    nana::textbox tb1;
-    nana::textbox tb2;
-    nana::textbox tb3;
-    nana::textbox tb4;
-    nana::button btn1;
-    nana::button btn2;
-    nana::button btn3;
+    nana::textbox tb_jobname;
+    nana::textbox tb_subject;
+    nana::textbox tb_template;
+    nana::textbox tb_selector;
+    nana::button btn_simulate_send;
+    nana::button btn_send;
+    nana::button btn_delete_job;
 };

@@ -66,58 +66,71 @@ MainForm::MainForm()
                 }
             }
             selected_job = job;
-            tb1.reset(job.get_jobname());
-            tb2.reset(job.get_subject());
-            tb3.reset(job.get_template());
-            tb4.reset(job.get_selector());
+            tb_jobname.reset(job.get_jobname());
+            tb_subject.reset(job.get_subject());
+            tb_template.reset(job.get_template());
+            tb_selector.reset(job.get_selector());
+            btn_send.enabled(selected_job.get_datetime() == "");
+            btn_simulate_send.enabled(true);
+            btn_delete_job.enabled(true);
         }
         else
         {
             selected_job = {};
+            tb_jobname.reset("");
+            tb_subject.reset("");
+            tb_template.reset("");
+            tb_selector.reset("");
+            btn_send.enabled(false);
+            btn_simulate_send.enabled(false);
+            btn_delete_job.enabled(false);
         }
     });
 
-    tb1.create(*this);
-    tb1.tip_string("Jobname:").multi_lines(false);
+    tb_jobname.create(*this);
+    tb_jobname.tip_string("Jobname:").multi_lines(false);
 
-    tb2.create(*this);
-    tb2.tip_string("Subject:").multi_lines(false);
+    tb_subject.create(*this);
+    tb_subject.tip_string("Subject:").multi_lines(false);
 
-    tb3.create(*this);
-    tb3.tip_string("Template:").multi_lines(true);
+    tb_template.create(*this);
+    tb_template.tip_string("Template:").multi_lines(true);
 
-    tb4.create(*this);
-    tb4.tip_string("Selector:").multi_lines(true);
+    tb_selector.create(*this);
+    tb_selector.tip_string("Selector:").multi_lines(true);
 
-    btn1.create(*this);
-    btn1.caption("Senden simulieren");
-    btn1.events().click([this]() {
+    btn_simulate_send.create(*this);
+    btn_simulate_send.caption("Senden simulieren");
+    btn_simulate_send.events().click([this]() {
         send_job(selected_job);
     });
+    btn_simulate_send.enabled(false);
 
-    btn2.create(*this);
-    btn2.caption("Job senden");
-    btn2.events().click([this]() {
+    btn_send.create(*this);
+    btn_send.caption("Job senden");
+    btn_send.events().click([this]() {
         simulate_send_job(selected_job);
     });
+    btn_send.enabled(false);
 
-    btn3.create(*this);
-    btn3.caption("Job löschen");
-    btn3.events().click([this]() {
+    btn_delete_job.create(*this);
+    btn_delete_job.caption("Job löschen");
+    btn_delete_job.events().click([this]() {
         delete_job(selected_job);
     });
+    btn_delete_job.enabled(false);
 
     place.bind(*this);
     place.div("vert<menubar weight=28> <<listbox>|60%<vertical <vertical gap=10 margin=10 textboxs arrange=[25,25]><weight=45 gap=10 margin=10 buttons>>>");
     place.field("menubar") << menubar;
     place.field("listbox") << list;
-    place.field("textboxs") << tb1;
-    place.field("textboxs") << tb2;
-    place.field("textboxs") << tb3;
-    place.field("textboxs") << tb4;
-    place.field("buttons") << btn1;
-    place.field("buttons") << btn2;
-    place.field("buttons") << btn3;
+    place.field("textboxs") << tb_jobname;
+    place.field("textboxs") << tb_subject;
+    place.field("textboxs") << tb_template;
+    place.field("textboxs") << tb_selector;
+    place.field("buttons") << btn_simulate_send;
+    place.field("buttons") << btn_send;
+    place.field("buttons") << btn_delete_job;
     place.collocate();
 }
 
@@ -193,8 +206,8 @@ void MainForm::update_listbox(std::vector<Job> jobs)
     list.auto_draw(true);
     all_jobs = jobs;
 
-    tb1.reset(selected_job.get_jobname());
-    tb2.reset(selected_job.get_subject());
-    tb3.reset(selected_job.get_template());
-    tb4.reset(selected_job.get_selector());
+    tb_jobname.reset(selected_job.get_jobname());
+    tb_subject.reset(selected_job.get_subject());
+    tb_template.reset(selected_job.get_template());
+    tb_selector.reset(selected_job.get_selector());
 }
