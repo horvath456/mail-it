@@ -73,10 +73,24 @@ int main()
         {
             db.delete_all_receipents();
             string file = files.front().string();
-            vector<Receipent> receipents = CSV::read_receipent_list(file);
-            for (Receipent &r : receipents)
+            try
             {
-                db.add_receipent(r);
+                vector<Receipent> receipents = CSV::read_receipent_list(file);
+                for (Receipent &r : receipents)
+                {
+                    db.add_receipent(r);
+                }
+                nana::msgbox mb{main_form.handle(), "Importieren erfolgreich", nana::msgbox::ok};
+                mb.icon(mb.icon_information);
+                mb << "Es wurden " << receipents.size() << " Receipents importiert.";
+                mb.show();
+            }
+            catch (...)
+            {
+                nana::msgbox mb{main_form.handle(), "Fehler", nana::msgbox::ok};
+                mb.icon(mb.icon_error);
+                mb << "Beim Importieren der Receipents ist ein Fehler aufgetreten.";
+                mb.show();
             }
         }
     };
