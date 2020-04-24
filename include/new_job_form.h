@@ -19,7 +19,10 @@ public:
     Job get_value();
 
 private:
+    void set_job_value();
+
     bool save_clicked = false;
+    Job job;
     nana::place place;
     nana::listbox job_properties_listbox;
     nana::textbox tb_jobname;

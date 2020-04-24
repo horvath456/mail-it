@@ -16,6 +16,7 @@ public:
 
 private:
     bool save_clicked = false;
+    std::string value;
     nana::place place;
     nana::textbox tb_template;
     nana::button btn_save;

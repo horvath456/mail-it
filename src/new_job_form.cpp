@@ -53,6 +53,7 @@ NewJobForm::NewJobForm(string tmplate)
     btn_create.caption("Anlegen");
     btn_create.events().click([this]() {
         save_clicked = true;
+        set_job_value();
         close();
     });
 
@@ -79,20 +80,12 @@ bool NewJobForm::saved()
     return save_clicked;
 }
 
-Job NewJobForm::get_value()
+void NewJobForm::set_job_value()
 {
-    Job job{};
-
-    cout << "Got jobname (caption) : " << tb_jobname.caption() << endl;
-    cout << "Got jobname (text) : " << tb_jobname.text() << endl;
-    std::string tbstring;
-    tb_jobname.getline(0, tbstring);
-    cout << "Got jobname (getline) : " << tbstring << endl;
-
-    job.set_jobname(tb_jobname.caption());
-    job.set_selector(tb_selector.caption());
-    job.set_template(tb_template.caption());
-    job.set_subject(tb_subject.caption());
+    job.set_jobname(tb_jobname.text());
+    job.set_selector(tb_selector.text());
+    job.set_template(tb_template.text());
+    job.set_subject(tb_subject.text());
 
     for (auto &entry : job_properties_listbox.at(0))
     {
@@ -100,6 +93,8 @@ Job NewJobForm::get_value()
         string value = entry.text(1);
         job.set_property(name, value);
     }
+}
 
+Job NewJobForm::get_value() {
     return job;
 }

@@ -252,6 +252,11 @@ optional<Config> DatabaseHandler::get_config()
 
 void DatabaseHandler::set_config(Config cfg)
 {
+    if (!get_config())
+    {
+        db.exec("INSERT INTO config VALUES (\"\", 0, \"\", \"\", \"\")");
+    }
+
     db.exec("UPDATE config SET host = \"" + cfg.host + "\", port = " + to_string(cfg.port) +
             ", username = \"" + cfg.username + "\", passwd = \"" + cfg.passwd +
             "\", template = \"" + cfg.tmplate + "\"");
