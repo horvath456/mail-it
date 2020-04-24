@@ -14,16 +14,6 @@ void TextboxInlineWidget::create(window wd)
     txt_.events().click([this] {
         indicator_->selected(pos_);
     });
-    txt_.events().mouse_move([this] {
-        indicator_->hovered(pos_);
-    });
-    txt_.events().key_char([this](const arg_keyboard &arg) {
-        if (arg.key == keyboard::enter)
-        {
-            arg.ignore = true;
-            indicator_->modify(pos_, txt_.caption());
-        }
-    });
 }
 
 void TextboxInlineWidget::activate(inline_indicator &ind, index_type pos)
