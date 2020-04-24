@@ -50,7 +50,7 @@ DatabaseHandler::DatabaseHandler() : db{"database.db3", SQLite::OPEN_READWRITE |
 void DatabaseHandler::add_receipent(Receipent r)
 {
     db.exec("INSERT INTO receipent VALUES (\"" + r.get_first_name() + "\", \"" +
-            r.get_last_name() + "\", \"" + r.get_email() + ")");
+            r.get_last_name() + "\", \"" + r.get_email() + "\")");
 
     for (auto el : r.get_other_properties())
     {
