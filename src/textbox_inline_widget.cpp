@@ -12,7 +12,7 @@ void TextboxInlineWidget::create(window wd)
 {
     txt_.create(wd);
     txt_.events().click([this] {
-        indicator_->selected(pos_);
+        //indicator_->selected(pos_);
     });
 }
 
@@ -35,7 +35,7 @@ void TextboxInlineWidget::resize(const nana::size &dimension)
 
 void TextboxInlineWidget::set(const value_type &value)
 {
-    txt_.caption(value);
+    //txt_.caption(value);
 }
 
 bool TextboxInlineWidget::whether_to_draw() const
