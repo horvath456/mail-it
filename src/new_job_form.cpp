@@ -1,5 +1,7 @@
 #include "new_job_form.h"
 
+#include <string>
+
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/menubar.hpp>
@@ -8,111 +10,12 @@
 #include <nana/gui/widgets/button.hpp>
 #include <nana/basic_types.hpp>
 #include <nana/gui/place.hpp>
-#include <string>
+
+#include "textbox_inline_widget.h"
+#include "button_inline_widget.h"
 
 using namespace nana;
 using namespace std;
-
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
-class TextboxInlineWidget : public listbox::inline_notifier_interface
-{
-    inline_indicator *indicator_{nullptr};
-    index_type pos_;
-    textbox txt_;
-
-private:
-    void create(window wd) override
-    {
-        txt_.create(wd);
-        txt_.events().click([this] {
-            indicator_->selected(pos_);
-        });
-        txt_.events().mouse_move([this] {
-            indicator_->hovered(pos_);
-        });
-        txt_.events().key_char([this](const arg_keyboard &arg) {
-            if (arg.key == keyboard::enter)
-            {
-                arg.ignore = true;
-                indicator_->modify(pos_, txt_.caption());
-            }
-        });
-    }
-
-    void activate(inline_indicator &ind, index_type pos) override
-    {
-        indicator_ = &ind;
-        pos_ = pos;
-    }
-
-    void notify_status(status_type status, bool status_on)
-    {
-    }
-
-    void resize(const nana::size &dimension) override
-    {
-        auto sz = dimension;
-        txt_.size(sz);
-        rectangle r(sz.width + 5, 0, 45, sz.height);
-    }
-
-    void set(const value_type &value) override
-    {
-        txt_.caption(value);
-    }
-
-    bool whether_to_draw() const override
-    {
-        return false;
-    }
-};
-
-class ButtonInlineWidget : public listbox::inline_notifier_interface
-{
-    inline_indicator *indicator_{nullptr};
-    index_type pos_;
-    button btn_;
-
-private:
-    void create(window wd) override
-    {
-        btn_.create(wd);
-        btn_.caption("Löschen");
-        btn_.events().click([this] {
-            auto &lsbox = dynamic_cast<listbox &>(indicator_->host());
-            lsbox.erase(lsbox.at(pos_));
-        });
-        btn_.events().mouse_move([this] {
-            indicator_->hovered(pos_);
-        });
-    }
-
-    void activate(inline_indicator &ind, index_type pos) override
-    {
-        indicator_ = &ind;
-        pos_ = pos;
-    }
-
-    void notify_status(status_type status, bool status_on)
-    {
-    }
-
-    void resize(const nana::size &dimension) override
-    {
-        auto sz = dimension;
-        btn_.size(sz);
-    }
-
-    void set(const value_type &value) override
-    {
-    }
-
-    bool whether_to_draw() const override
-    {
-        return false;
-    }
-};
 
 NewJobForm::NewJobForm(string tmplate)
 {

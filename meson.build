@@ -36,6 +36,8 @@ src = ['src/main.cpp',
        'src/email_config_inputbox.cpp',
        'src/template_config_form.cpp',
        'src/new_job_form.cpp',
+       'src/textbox_inline_widget.cpp',
+       'src/button_inline_widget.cpp',
        'src/util.cpp']
 
 executable('mail-it', 
