@@ -83,7 +83,15 @@ Job NewJobForm::get_value()
 {
     Job job{};
 
-    cout << "Jobname in new_job_form: 1: " << tb_jobname.text() << " 2: " << tb_jobname.getline(0).value() << endl;
+    cout << "Jobname in new_job_form: 1: " << tb_jobname.text() << endl;
+    if (tb_jobname.getline(0))
+    {
+        cout << "getline out0: " << tb_jobname.getline(0).value() << endl;
+    }
+    if (tb_jobname.getline(1))
+    {
+        cout << "getline out1: " << tb_jobname.getline(1).value() << endl;
+    }
 
     job.set_jobname(tb_jobname.text());
     job.set_selector(tb_selector.text());
