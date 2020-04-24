@@ -191,7 +191,6 @@ void MainForm::update_listbox(std::vector<Job> jobs)
     all_jobs_listbox.clear();
     for (auto &job : jobs)
     {
-        cout << "Inserting job into listbox: " << job.get_jobname() << endl;
         all_jobs_listbox.at(0).append(job);
     }
     all_jobs_listbox.auto_draw(true);

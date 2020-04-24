@@ -114,9 +114,7 @@ int main()
             return;
         }
 
-        Job job{new_job_form.get_value()};
-
-        cout << "Got new job with jobname: " << job.get_jobname() << endl;
+        Job job = new_job_form.get_value();
 
         try
         {

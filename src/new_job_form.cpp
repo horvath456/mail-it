@@ -1,6 +1,7 @@
 #include "new_job_form.h"
 
 #include <string>
+#include <iostream>
 
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -81,6 +82,8 @@ bool NewJobForm::saved()
 Job NewJobForm::get_value()
 {
     Job job{};
+
+    cout << "Jobname in new_job_form: 1: " << tb_jobname.text() << " 2: " << tb_jobname.getline(0).value() << endl;
 
     job.set_jobname(tb_jobname.text());
     job.set_selector(tb_selector.text());
