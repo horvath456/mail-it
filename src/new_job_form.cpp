@@ -83,6 +83,12 @@ Job NewJobForm::get_value()
 {
     Job job{};
 
+    cout << "Got jobname (caption) : " << tb_jobname.caption() << endl;
+    cout << "Got jobname (text) : " << tb_jobname.text() << endl;
+    std::string tbstring;
+    tb_jobname.getline(0, tbstring);
+    cout << "Got jobname (getline) : " << tbstring << endl;
+
     job.set_jobname(tb_jobname.caption());
     job.set_selector(tb_selector.caption());
     job.set_template(tb_template.caption());

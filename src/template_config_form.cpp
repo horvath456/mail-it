@@ -8,7 +8,9 @@
 #include <nana/gui/widgets/button.hpp>
 #include <nana/basic_types.hpp>
 #include <nana/gui/place.hpp>
+
 #include <string>
+#include <iostream>
 
 using namespace nana;
 using namespace std;
@@ -42,5 +44,13 @@ bool TemplateConfigForm::saved()
 
 string TemplateConfigForm::get_value()
 {
+    cout << "Got template (caption) : " << tb_template.caption() << endl;
+    cout << "Got template (text) : " << tb_template.text() << endl;
+    std::string tbstring;
+    tb_template.getline(0, tbstring);
+    cout << "Got template (getline) : " << tbstring << endl;
+
+    tb_template.store("testfile.txt");
+
     return tb_template.text();
 }
