@@ -41,8 +41,9 @@ int main()
             mailer.init_session(cfg.host, cfg.port, cfg.username, cfg.passwd);
         }
     }
-    catch (...)
+    catch (exception &e)
     {
+        cerr << e.what() << endl;
         show_error_message_box("Fehler", "Beim Lesen der Konfiguration ist ein Fehler aufgetreten.");
         return -1;
     }
@@ -57,8 +58,9 @@ int main()
             db.delete_all_receipents();
             show_info_message_box("Löschen erfolgreich", "Es wurden alle Receipents gelöscht.");
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Löschen der Receipents ist ein Fehler aufgetreten.");
         }
     };
@@ -74,8 +76,9 @@ int main()
         {
             db.delete_all_receipents();
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Löschen der Receipents ist ein Fehler aufgetreten.");
             return;
         }
@@ -89,8 +92,9 @@ int main()
             }
             show_info_message_box("Importieren erfolgreich", "Es wurden " + to_string(receipents.size()) + " Receipents importiert.");
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Importieren der Receipents ist ein Fehler aufgetreten.");
         }
     };
@@ -130,8 +134,9 @@ int main()
                 show_error_message_box("Fehler", "Beim Erstellen des Jobs ist ein Fehler aufgetreten.");
             }
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Erstellen des Jobs ist ein Fehler aufgetreten.");
         }
     };
@@ -159,8 +164,9 @@ int main()
         {
             db.set_config(cfg);
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Schreiben der Konfiguration ist ein Fehler aufgetreten.");
         }
 
@@ -188,8 +194,9 @@ int main()
         {
             db.set_config(cfg);
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Schreiben der Konfiguration ist ein Fehler aufgetreten.");
         }
     };
@@ -251,8 +258,9 @@ int main()
                 main_form.update_listbox(db.get_all_jobs());
             }
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Versenden des Jobs ist ein Fehler aufgetreten.");
         }
     };
@@ -281,8 +289,9 @@ int main()
                                 });
             myfile.close();
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Simulieren des Versendens des Jobs ist ein Fehler aufgetreten.");
         }
     };
@@ -294,8 +303,9 @@ int main()
             main_form.remove_selection();
             main_form.update_listbox(db.get_all_jobs());
         }
-        catch (...)
+        catch (exception &e)
         {
+            cerr << e.what() << endl;
             show_error_message_box("Fehler", "Beim Löschen des Jobs ist ein Fehler aufgetreten.");
         }
     };
