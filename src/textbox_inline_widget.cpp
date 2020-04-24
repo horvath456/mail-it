@@ -12,7 +12,22 @@ void TextboxInlineWidget::create(window wd)
 {
     txt_.create(wd);
     txt_.events().click([this] {
-        //indicator_->selected(pos_);
+        //Select the item when clicks the textbox
+        indicator_->selected(pos_);
+    });
+
+    txt_.events().mouse_move([this] {
+        //Highlight the item when hovers the textbox
+        indicator_->hovered(pos_);
+    });
+
+    txt_.events().key_char([this](const arg_keyboard &arg) {
+        if (arg.key == keyboard::enter)
+        {
+            //Modify the item when enter is pressed
+            arg.ignore = true;
+            indicator_->modify(pos_, txt_.caption());
+        }
     });
 }
 
