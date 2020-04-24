@@ -83,20 +83,10 @@ Job NewJobForm::get_value()
 {
     Job job{};
 
-    cout << "Jobname in new_job_form: 1: " << tb_jobname.text() << endl;
-    if (tb_jobname.getline(0))
-    {
-        cout << "getline out0: " << tb_jobname.getline(0).value() << endl;
-    }
-    if (tb_jobname.getline(1))
-    {
-        cout << "getline out1: " << tb_jobname.getline(1).value() << endl;
-    }
-
-    job.set_jobname(tb_jobname.text());
-    job.set_selector(tb_selector.text());
-    job.set_template(tb_template.text());
-    job.set_subject(tb_subject.text());
+    job.set_jobname(tb_jobname.caption());
+    job.set_selector(tb_selector.caption());
+    job.set_template(tb_template.caption());
+    job.set_subject(tb_subject.caption());
 
     for (auto &entry : job_properties_listbox.at(0))
     {
