@@ -10,5 +10,3 @@ Mit mingw, meson und gcc. Abhängigkeiten jeweils unter Windows entsprechend der
 ##Known Bugs
 Eigenschaften, die einem Job zugeordnet werden, werden möglicherweise nicht gespeichert.
 Das Templating funktioniert nicht zuverlässig bei Variablen aus der Jobdatei.
-Das Senden mit dem mailclient schlägt fehl.
-Die GUI-Library nana funktioniert unter verschiedenen Linux-Installationen unterschiedlich gut.
