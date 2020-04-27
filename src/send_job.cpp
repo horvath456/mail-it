@@ -119,18 +119,22 @@ void JobSender::send_job(Job job, string jobfile, vector<Receipent> all_receipen
         json data;
         for (auto &receipent_prop : r.properties)
         {
+            data[string_to_lower_case(receipent_prop.first)] = receipent_prop.second.value;
             data[receipent_prop.first] = receipent_prop.second.value;
         }
         for (auto &job_prop : job.properties)
         {
             data[string_to_lower_case(job_prop.first)] = job_prop.second.value;
+            data[job_prop.first] = job_prop.second.value;
         }
         for (auto &jobfile_prop : jobfile_el)
         {
+            data[string_to_lower_case(static_cast<string>(jobfile_prop.first))] = static_cast<string>(jobfile_prop.second);
             data[static_cast<string>(jobfile_prop.first)] = static_cast<string>(jobfile_prop.second);
             cout << "Jobfile property: " << (static_cast<string>(jobfile_prop.first)) << " v: " << (static_cast<string>(jobfile_prop.second)) << endl;
         }
         data["date"] = get_date_string();
+        data["Date"] = get_date_string();
 
         string email_contents{render(job.get_template(), data)};
         string email_receiver = r.get_email();
