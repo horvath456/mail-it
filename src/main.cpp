@@ -35,16 +35,6 @@ using namespace Util;
 
 int main()
 {
-    CSMTPClient SMTPClient{[](const std::string &str) { cerr << str << endl; }};
-    SMTPClient.InitSession("smtp.office365.com:587", "Horvath.Andreas@student.htlwrn.ac.at", "",
-                           CMailClient::SettingsFlag::ALL_FLAGS,
-                           CMailClient::SslTlsFlag::ENABLE_TLS);
-    bool res = SMTPClient.SendString("<Horvath.Andreas@student.htlwrn.ac.at>", "<mail@andreas-horvath.at>", "", "Subject: Test\n\nHallo\n");
-    if (res)
-        cout << "JAA" << endl;
-    else
-        cout << "NEIN" << endl;
-
     DatabaseHandler db{};
     MailHandler mailer{};
     MainForm main_form{};
