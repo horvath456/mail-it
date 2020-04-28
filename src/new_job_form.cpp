@@ -91,10 +91,12 @@ void NewJobForm::set_job_value()
     {
         string name = entry.text(0);
         string value = entry.text(1);
+        cout << "Found entry: " << name << " : " << value << endl;
         job.set_property(name, value);
     }
 }
 
-Job NewJobForm::get_value() {
+Job NewJobForm::get_value()
+{
     return job;
 }
